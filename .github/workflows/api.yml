@@ -34,14 +34,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Installing .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0.x"
           cache: true
       - run: |
-          cd API && dotnet build API
+          cd API
+          dotnet restore
+          dotnet --configuration Release --no-restore
         working-directory: API/
 
   test:
