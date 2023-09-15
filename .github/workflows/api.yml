@@ -29,7 +29,7 @@ jobs:
           echo environment=$environment >> "$GITHUB_OUTPUT"
 
   build:
-    name: Build projects in the solution
+    name: Build projects
     needs: [setup]
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +45,7 @@ jobs:
         working-directory: API/
 
   test:
+    name: Unit testing
     needs: [build]
     runs-on: ubuntu-latest
     steps:
