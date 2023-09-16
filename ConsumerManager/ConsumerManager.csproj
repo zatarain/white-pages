@@ -8,6 +8,7 @@
 
   <PropertyGroup>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <UserSecretsId>6567f718-9800-4080-81a1-f4f1dc24d8cf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
