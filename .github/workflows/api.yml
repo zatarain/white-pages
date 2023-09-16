@@ -38,8 +38,9 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "8.0.x"
-          dotnet-quality: "preview"
+          dotnet-version: "7.0.x"
+          cache: true
+          cache-dependency-path: ConsumerManager/packages.lock.json
       - name: Installing dependencies
         run: |
           dotnet restore --locked-mode
