@@ -28,29 +28,47 @@ jobs:
           fi
           echo environment=$environment >> "$GITHUB_OUTPUT"
 
-  build:
-    name: Build projects
+  build-and-test:
+    name: Build and test projects
     needs: [setup]
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:14-3.3
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
     steps:
-      - name: Checkout
+      - name: Checkout solution
         uses: actions/checkout@v4
-      - name: Setup .NET Core
+      - name: Installing .NET Core
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0.x"
           cache: true
           cache-dependency-path: ConsumerManager/packages.lock.json
       - name: Installing dependencies
+        run: dotnet restore --locked-mode
+      - name: Compiling projects
+        run: dotnet build --configuration Release --no-restore
+      - name: Migrating database
         run: |
-          dotnet restore --locked-mode
-          dotnet --configuration Release --no-restore
-
-  test:
-    name: Unit testing
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
+          dotnet tool install --global dotnet-ef
+          dotnet tool restore
+          dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
+      - name: Testing
+        run: dotnet test --configuration Release --no-restore --no-build --verbosity normal --collect:"XPlat Code Coverage"
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
