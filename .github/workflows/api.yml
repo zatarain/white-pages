@@ -62,12 +62,12 @@ jobs:
         run: dotnet restore --locked-mode
       - name: Compiling projects
         run: dotnet build --configuration Release --no-restore
-      # - name: Migrating database
+      # - name: Running database migrations
       #   run: |
       #     dotnet tool install --global dotnet-ef
       #     dotnet tool restore
       #     dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
-      - name: Testing
+      - name: Running unit tests
         run: dotnet test --configuration Release --no-restore --no-build --verbosity normal --collect:"XPlat Code Coverage"
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
