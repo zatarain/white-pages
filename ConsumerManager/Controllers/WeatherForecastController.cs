@@ -1,3 +1,4 @@
+using ConsumerManager.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConsumerManager.Controllers
@@ -11,24 +12,23 @@ namespace ConsumerManager.Controllers
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly ILogger<WeatherForecastController> logger;
 
     public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
-      _logger = logger;
+      this.logger = logger;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
-      _logger.LogInformation("Getting five weather forecasts");
+      logger.LogInformation("Getting five weather forecasts");
       return Enumerable.Range(1, 5).Select(index => new WeatherForecast
       {
         Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
         TemperatureC = Random.Shared.Next(-20, 55),
         Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-      })
-      .ToArray();
+      }).ToArray();
     }
   }
 }

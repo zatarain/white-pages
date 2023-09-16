@@ -1,7 +1,7 @@
 namespace ConsumerManager.Unit.Tests;
 
 using Moq;
-using ConsumerManager;
+using ConsumerManager.Entities;
 using ConsumerManager.Controllers;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -21,11 +21,11 @@ public class WeatherForecastControllerTests
 		// Assert
 		result.Should().HaveCount(5);
 		loggerMock.Verify(logger => logger.Log(
-				It.Is<LogLevel>(logLevel => logLevel == LogLevel.Information),
-				It.Is<EventId>(eventId => eventId.Id == 0),
-				It.Is<It.IsAnyType>((@object, @type) => @object.ToString() == "Getting five weather forecasts" && @type.Name == "FormattedLogValues"),
-				It.IsAny<Exception>(),
-				It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+			It.Is<LogLevel>(logLevel => logLevel == LogLevel.Information),
+			It.Is<EventId>(eventId => eventId.Id == 0),
+			It.Is<It.IsAnyType>((@object, @type) => @object.ToString() == "Getting five weather forecasts" && @type.Name == "FormattedLogValues"),
+			It.IsAny<Exception>(),
+			It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
 		Times.Once);
 	}
 }

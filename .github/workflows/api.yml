@@ -68,7 +68,13 @@ jobs:
       #     dotnet tool restore
       #     dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
       - name: Running unit tests
-        run: dotnet test --configuration Release --no-restore --no-build --verbosity normal --collect:"XPlat Code Coverage"
+        run: |
+          dotnet test \
+            --configuration Release \
+            --no-restore --no-build \
+            --verbosity normal \
+            --collect:"XPlat Code Coverage" \
+            ConsumerManager.Unit.Tests
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
