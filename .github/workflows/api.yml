@@ -59,9 +59,9 @@ jobs:
           cache: true
           cache-dependency-path: ConsumerManager/packages.lock.json
       - name: Installing dependencies
-        run: dotnet restore --locked-mode
+        run: dotnet restore --locked-mode white-pages.sln
       - name: Compiling projects
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore white-pages.sln
       # - name: Running database migrations
       #   run: |
       #     dotnet tool install --global dotnet-ef
@@ -73,7 +73,8 @@ jobs:
             --configuration Release \
             --no-restore --no-build \
             --verbosity normal \
-            --collect:"XPlat Code Coverage"
+            --collect:"XPlat Code Coverage" \
+            white-pages.sln
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
