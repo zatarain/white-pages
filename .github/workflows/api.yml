@@ -45,7 +45,7 @@ jobs:
         run: |
           dotnet restore --locked-mode
           dotnet --configuration Release --no-restore
-        working-directory: API/
+        working-directory: ConsumerManager/
 
   test:
     name: Unit testing
