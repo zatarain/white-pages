@@ -1,6 +1,6 @@
 ﻿namespace ConsumerManager.Entities.Database
 {
-  public class PostgresConnection
+  public record PostgresConnection
   {
     public string Hostname { get; set; }
 
@@ -10,7 +10,14 @@
 
     public string Password { get; set; }
 
-    public string ToString()
+    public PostgresConnection()
+    {
+      Database = string.Empty;
+      Hostname = string.Empty;
+      Username = string.Empty;
+      Password = string.Empty;
+    }
+    public override string ToString()
     {
       return $"Host={Hostname};Database={Database};Username={Username};Password={Password}";
     }
