@@ -20,7 +20,7 @@ namespace ConsumerManager.Entities.Database
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       base.OnModelCreating(modelBuilder);
-      modelBuilder.Entity<WeatherForecast>();
+      modelBuilder.Entity<WeatherForecast>().HasNoKey();
       //.HasOne(m => m.Publisher).WithMany(m => m.Books);
     }
   }
