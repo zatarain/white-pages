@@ -46,9 +46,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
-      POSTGRES_HOST: localhost
-      POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      Postgres__Hostname: localhost
+      Postgres__Database: consumer-manager-test
+      Postgres__Username: ${{ secrets.POSTGRES_USERNAME }}
+      Postgres__Password: ${{ secrets.POSTGRES_PASSWORD }}
     steps:
       - name: Checkout solution
         uses: actions/checkout@v4
