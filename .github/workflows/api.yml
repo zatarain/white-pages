@@ -59,14 +59,14 @@ jobs:
           dotnet-version: "7.0.x"
           cache: true
           cache-dependency-path: ConsumerManager/packages.lock.json
-      - name: Installing dependencies
-        run: dotnet restore --locked-mode white-pages.sln
+      - name: Installing tools and dependencies
+        run: |
+          dotnet tool restore
+          dotnet restore --locked-mode white-pages.sln
       - name: Compiling projects
         run: dotnet build --configuration Release --no-restore white-pages.sln
       - name: Running database migrations
-        run: |
-          dotnet tool restore
-          dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
+        run: dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
       - name: Running unit tests
         run: |
           dotnet test \
