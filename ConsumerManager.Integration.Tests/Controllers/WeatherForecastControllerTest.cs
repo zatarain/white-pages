@@ -16,8 +16,10 @@ public class WeatherForecastControllerTest : IClassFixture<WebApplicationFactory
 	[Fact]
 	public async Task Get_Always_SuccessReturningFiveItems()
 	{
-		// Arrange
-		var client = factory.CreateClient();
+		var valp = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+		System.Console.WriteLine($"p-value: {valp}");
+    // Arrange
+    var client = factory.CreateClient();
 
 		// Act
 		var response = await client.GetAsync("/WeatherForecast");

@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   consumermanager:
@@ -8,15 +8,15 @@ services:
       context: .
       dockerfile: ConsumerManager/Dockerfile
     ports:
-      - 7080:80
-      - 7000:443
+      - "7080:80"
+      - "7000:443"
     depends_on:
       - database
     environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      Postgres__Database: consumer-manager-dev
+      Postgres__Hostname: ${POSTGRES_HOST}
+      Postgres__Username: ${POSTGRES_USERNAME}
+      Postgres__Password: ${POSTGRES_PASSWORD}
 
   database:
     container_name: database
@@ -27,10 +27,11 @@ services:
     volumes:
       - data:/var/lib/postgresql/data/pgdata
     environment:
-      POSTGRES_USER: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
-      POSTGRES_DB: postgres
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
 volumes:
   data:

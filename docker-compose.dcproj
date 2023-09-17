@@ -8,7 +8,7 @@
   <PropertyGroup>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceName>consumermanager</DockerServiceName>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/WeatherForecast</DockerServiceUrl>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger/index.html</DockerServiceUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
