@@ -1,0 +1,43 @@
+version: "3.4"
+
+services:
+  consumermanager:
+    container_name: api-service
+    image: ${DOCKER_REGISTRY-}consumermanager
+    build:
+      context: .
+      dockerfile: ConsumerManager/Dockerfile
+    ports:
+      - "7080:80"
+      - "7000:443"
+    depends_on:
+      - database
+    environment:
+      Postgres__Database: consumer-manager-dev
+      Postgres__Hostname: ${POSTGRES_HOST}
+      Postgres__Username: ${POSTGRES_USERNAME}
+      Postgres__Password: ${POSTGRES_PASSWORD}
+
+  database:
+    container_name: database
+    image: postgis/postgis:14-3.3
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgresql/data/pgdata
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+volumes:
+  data:
+    name: consumer-database
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: data

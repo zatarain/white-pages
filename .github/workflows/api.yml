@@ -1,0 +1,81 @@
+name: Continuous Integration Pipeline
+on:
+  push:
+    branches: [main, staging, development]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  setup:
+    name: Setup workspace
+    runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.names.outputs.name }}
+      environment: ${{ steps.names.outputs.environment }}
+    env:
+      BRANCH: ${{ github.ref_name }}
+    steps:
+      - id: names
+        name: Name for GitHub Environment
+        run: |
+          environtment=Development
+          if [ "$BRANCH" = "main" ]; then
+            name=production
+            environment=Production
+          elif [ "$BRANCH" = "staging" ]; then
+            environment=${BRANCH^}
+          fi
+          echo environment=$environment >> "$GITHUB_OUTPUT"
+
+  build-and-test:
+    name: Build and test projects
+    needs: [setup]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:14-3.3
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      Postgres__Hostname: localhost
+      Postgres__Database: consumer-manager-test
+      Postgres__Username: ${{ secrets.POSTGRES_USERNAME }}
+      Postgres__Password: ${{ secrets.POSTGRES_PASSWORD }}
+    steps:
+      - name: Checkout solution
+        uses: actions/checkout@v4
+      - name: Installing .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0.x"
+          cache: true
+          cache-dependency-path: ConsumerManager/packages.lock.json
+      - name: Installing tools and dependencies
+        run: |
+          dotnet tool restore
+          dotnet restore --locked-mode white-pages.sln
+      - name: Compiling projects
+        run: dotnet build --configuration Release --no-restore white-pages.sln
+      - name: Running database migrations
+        run: dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
+      - name: Running unit tests
+        run: |
+          dotnet test \
+            --configuration Release \
+            --no-restore --no-build \
+            --verbosity normal \
+            --collect:"XPlat Code Coverage" \
+            white-pages.sln
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
