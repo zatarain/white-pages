@@ -6,6 +6,7 @@
         <Configuration>
           <Format>cobertura</Format>
           <ExcludeByFile>"**/*Migrations/*.cs"</ExcludeByFile>
+          <ExcludeByFile>"**/Entities/Database/*.cs"</ExcludeByFile>
         </Configuration>
       </DataCollector>
     </DataCollectors>
