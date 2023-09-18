@@ -5,7 +5,7 @@ namespace ConsumerManager.Entities.Database
 {
   public class RelationalModel : DbContext
   {
-    public DbSet<WeatherForecast> WeatherForecast { get; set; }
+    public DbSet<WeatherForecast> WeatherForecasts { get; set; }
 
     public RelationalModel() : base()
     {
