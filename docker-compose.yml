@@ -13,7 +13,7 @@ services:
     depends_on:
       - database
     environment:
-      Postgres__Database: consumer-manager-dev
+      Postgres__Database: consumer-manager
       Postgres__Hostname: ${POSTGRES_HOST}
       Postgres__Username: ${POSTGRES_USERNAME}
       Postgres__Password: ${POSTGRES_PASSWORD}

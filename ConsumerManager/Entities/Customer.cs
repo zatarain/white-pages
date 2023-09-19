@@ -22,8 +22,7 @@ namespace ConsumerManager.Entities
     [MaxLength(15)]
     public required string Phone { get; init; }
 
-    [JsonIgnore]
-    public required virtual ICollection<Address> Addresses { get; init; }
+    public required virtual ICollection<Address> Addresses { get; set; }
     
     public virtual DateTime CreatedAt { get; init; }
     public virtual DateTime LastUpdatedAt { get; init; }

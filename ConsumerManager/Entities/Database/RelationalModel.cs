@@ -7,8 +7,8 @@ namespace ConsumerManager.Entities.Database
 {
   public class RelationalModel : DbContext
   {
-    public DbSet<Customer> Customers { get; set; }
-    public DbSet<Address> Addresses { get; set; }
+    public virtual DbSet<Customer> Customers { get; set; }
+    public virtual DbSet<Address> Addresses { get; set; }
 
     public RelationalModel() : base()
     {
