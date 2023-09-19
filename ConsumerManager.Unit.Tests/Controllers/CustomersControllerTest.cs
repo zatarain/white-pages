@@ -62,13 +62,13 @@ namespace ConsumerManager.Unit.Tests.Controllers
     }
 
     [Fact]
-    public void Read_UnexistentCustomer_ReturnsNotFound()
+    public async Task Read_UnexistentCustomer_ReturnsNotFound()
     {
       // Arrange
       var loggerMock = new Mock<ILogger<CustomersController>>();
 
       var customersMock = new Mock<DbSet<Customer>>();
-      customersMock.Setup(mock => mock.Find(It.IsAny<int>())).Returns(null as Customer);
+      customersMock.Setup(mock => mock.FindAsync(It.IsAny<int>())).ReturnsAsync(null as Customer);
 
       var modelMock = new Mock<RelationalModel>();
       modelMock.Setup(mock => mock.Customers).Returns(customersMock.Object);
@@ -76,14 +76,14 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var controller = new CustomersController(loggerMock.Object, modelMock.Object);
 
       // Act
-      var actual = controller.Read(2);
+      var actual = await controller.Read(2);
 
       // Assert
       actual.Result.Should().BeOfType<NotFoundResult>();
     }
 
     [Fact]
-    public void Read_ExistentCustomer_ReturnsCustomer()
+    public async Task Read_ExistentCustomer_ReturnsCustomer()
     {
       // Arrange
       var customer = new Customer
@@ -102,7 +102,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var loggerMock = new Mock<ILogger<CustomersController>>();
 
       var customersMock = new Mock<DbSet<Customer>>();
-      customersMock.Setup(mock => mock.Find(It.IsAny<int>())).Returns(customer);
+      customersMock.Setup(mock => mock.FindAsync(It.IsAny<int>())).ReturnsAsync(customer);
 
       var modelMock = new Mock<RelationalModel>();
       modelMock.Setup(mock => mock.Customers).Returns(customersMock.Object);
@@ -110,7 +110,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var controller = new CustomersController(loggerMock.Object, modelMock.Object);
 
       // Act
-      var actual = controller.Read(1);
+      var actual = await controller.Read(1);
 
       // Assert
       actual.Should().NotBeNull();

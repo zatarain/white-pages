@@ -27,10 +27,10 @@ namespace ConsumerManager.Controllers
     }
 
     [HttpGet("{id}")] // GET /customers/{id}
-    public ActionResult<Customer> Read(int id)
+    public async Task<ActionResult<Customer>> Read(int id)
     {
       logger.LogInformation("Getting a single customer");
-      var customer = model.Customers.Find(id);
+      var customer = await model.Customers.FindAsync(id);
       if (customer is null)
       {
         return NotFound();
