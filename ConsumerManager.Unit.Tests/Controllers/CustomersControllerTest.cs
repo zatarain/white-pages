@@ -79,7 +79,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var actual = controller.Read(2);
 
       // Assert
-      Assert.IsType<NotFoundResult>(actual.Result);
+      actual.Result.Should().BeOfType<NotFoundResult>();
     }
 
     [Fact]
