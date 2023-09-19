@@ -18,7 +18,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
   public class CustomersControllerTest
   {
     [Fact]
-    public void ReadAll_Always_ReturnsListOfCustomers()
+    public async Task ReadAll_Always_ReturnsListOfCustomers()
     {
       // Arrange
       var data = new List<Customer>
@@ -51,7 +51,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var controller = new CustomersController(loggerMock.Object, modelMock.Object);
 
       // Act
-      var actual = controller.ReadAll();
+      var actual = await controller.ReadAll();
 
       // Assert
       actual.Should().NotBeNull();

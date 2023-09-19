@@ -20,10 +20,10 @@ namespace ConsumerManager.Controllers
     }
 
     [HttpGet] // GET /customers
-    public ActionResult<List<Customer>> ReadAll()
+    public async Task<ActionResult<List<Customer>>> ReadAll()
     {
       logger.LogInformation("Getting list of customers");
-      return model.Customers.ToList();
+      return await Task.FromResult(model.Customers.ToList());
     }
 
     [HttpGet("{id}")] // GET /customers/{id}
