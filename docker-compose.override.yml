@@ -4,7 +4,7 @@ services:
   consumermanager:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://0.0.0.0:80;http://0.0.0.0:443
+      - ASPNETCORE_URLS=https://0.0.0.0:443;http://0.0.0.0:80
     ports:
       - "7080:80"
       - "7000:443"
