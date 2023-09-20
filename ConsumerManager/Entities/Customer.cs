@@ -5,27 +5,47 @@ namespace ConsumerManager.Entities
 {
   public record Customer
   {
-    public required int Id { get; init; }
+    public int? Id { get; set; }
 
     [MaxLength(20)]
-    public required string Title { get; init; }
+    public required string Title { get; set; }
     
     [MaxLength(50)]
-    public required string Forename { get; init; }
+    public required string Forename { get; set; }
     
     [MaxLength(50)]
-    public required string Surename { get; init; }
+    public required string Surename { get; set; }
     
     [MaxLength(75)]
-    public required string Email { get; init; }
+    public required string Email { get; set; }
     
+    [MaxLength(15)]
+    public required string Phone { get; set; }
+
+    public virtual ICollection<Address>? Addresses { get; set; }
+    
+    public virtual DateTime CreatedAt { get; set; }
+    public virtual DateTime LastUpdatedAt { get; set; }
+  }
+
+  public record CreateCustomerContract
+  {
+    [MaxLength(20)]
+    public required string Title { get; init; }
+
+    [MaxLength(50)]
+    public required string Forename { get; init; }
+
+    [MaxLength(50)]
+    public required string Surename { get; init; }
+
+    [MaxLength(75)]
+    public required string Email { get; init; }
+
     [MaxLength(15)]
     public required string Phone { get; init; }
 
-    public required virtual ICollection<Address> Addresses { get; set; }
-    
-    public virtual DateTime CreatedAt { get; init; }
-    public virtual DateTime LastUpdatedAt { get; init; }
+    //public required virtual ICollection<Address> Addresses { get; set; }
   }
 }
  

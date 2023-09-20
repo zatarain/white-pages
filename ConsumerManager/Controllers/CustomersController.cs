@@ -1,5 +1,6 @@
 ﻿using ConsumerManager.Entities;
 using ConsumerManager.Entities.Database;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -36,6 +37,25 @@ namespace ConsumerManager.Controllers
         return NotFound();
       }
       return customer;
+    }
+    [HttpPost]
+    public async Task<ActionResult<Customer>> Create(CreateCustomerContract contract)
+    {
+      // model.AddAsync(contract);
+      var customer = new Customer
+      {
+        Title = contract.Title,
+        Forename = contract.Forename,
+        Surename = contract.Surename,
+        Email = contract.Email,
+        Phone = contract.Phone,
+        CreatedAt = DateTime.UtcNow,
+        LastUpdatedAt = DateTime.UtcNow,
+      };
+      await model.AddAsync(customer);
+      await model.SaveChangesAsync();
+      logger.LogInformation($"Created new customer with Id = {customer.Id}");
+      return CreatedAtAction(nameof(Read), new { id = customer.Id }, customer);
     }
   }
 }
