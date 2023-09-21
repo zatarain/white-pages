@@ -36,7 +36,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
         Title = "Mr.",
         Forename = "John",
         Surname = "Smith",
-        Email = "john.smith@gmail.com",
+        Email = "john.smith@example.com",
         Phone = "+4407111222333",
         IsActive = true,
         Addresses = new List<Address>(),
@@ -98,6 +98,36 @@ namespace ConsumerManager.Unit.Tests.Controllers
     }
 
     [Fact]
+    public async Task Create_WithValidData_ReturnsCreatedCustomer()
+    {
+      // Arrange
+      serviceMock.Setup(mock => mock.CustomerExists(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
+      serviceMock.Setup(mock => mock.CreateCustomer(It.IsAny<Customer>())).Returns(Task.CompletedTask);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+      
+      CreateCustomerContract request = new()
+      {
+        Title = "Mr.",
+        Forename = "New",
+        Surname = "Customer",
+        Email = "john.smith@example.com",
+        Phone = "+4407111222333",
+      };
+
+      // Act
+      var actual = await controller.Create(request);
+
+      // Assert
+      actual?.Result.Should().BeOfType<CreatedAtActionResult>();
+      var result = actual?.Result as CreatedAtActionResult;
+      var createdCustomer = result?.Value as Customer;
+      request.Should().BeEquivalentTo(
+        createdCustomer,
+        options => options.ComparingByMembers<Customer>().ExcludingMissingMembers()
+      );
+    }
+
+    [Fact]
     public async Task Create_WithNullInputData_ReturnsBadrequest()
     {
       // Arrange
@@ -120,7 +150,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
         Title = "Mr.",
         Forename = "New",
         Surname = "Customer",
-        Email = "john.smith@gmail.com",
+        Email = "john.smith@example.com",
         Phone = "+4407111222333",
       };
 
