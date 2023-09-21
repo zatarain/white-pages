@@ -25,7 +25,8 @@ namespace ConsumerManager.Controllers
     public async Task<ActionResult<List<Customer>>> ReadAll()
     {
       logger.LogInformation("Getting list of customers");
-      return await service.GetAllCustomers();
+      var customers = await service.GetAllCustomers();
+      return Ok(customers);
     }
 
     [HttpGet("{id}")] // GET /customers/{id}
@@ -37,7 +38,7 @@ namespace ConsumerManager.Controllers
       {
         return NotFound();
       }
-      return customer;
+      return Ok(customer);
     }
     [HttpPost]
     public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerContract? contract)

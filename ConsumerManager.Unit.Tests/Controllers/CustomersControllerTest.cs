@@ -60,10 +60,9 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var actual = await controller.ReadAll();
 
       // Assert
-      actual.Should().NotBeNull();
-      var customers = actual.Value;
-      customers.Should().NotBeNull();
-      customers.Should().BeEquivalentTo(data.ToList());
+      actual.Result.Should().BeOfType<OkObjectResult>();
+      var result = actual.Result as OkObjectResult;
+      result?.Value.Should().BeEquivalentTo(data.ToList());
     }
 
     [Fact]
@@ -92,8 +91,9 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var actual = await controller.Read(1);
 
       // Assert
-      actual.Should().NotBeNull();
-      actual.Value.Should().BeEquivalentTo(customer, options => options.ComparingByMembers<Customer>());
+      actual.Result.Should().BeOfType<OkObjectResult>();
+      var result = actual.Result as OkObjectResult;
+      result?.Value.Should().BeEquivalentTo(customer, options => options.ComparingByMembers<Customer>());
     }
 
     [Fact]
@@ -108,6 +108,5 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual?.Result.Should().BeOfType<BadRequestObjectResult>();
     }
-    /**/
   }
 }

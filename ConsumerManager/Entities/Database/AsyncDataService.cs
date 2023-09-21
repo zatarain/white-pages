@@ -37,5 +37,15 @@ namespace ConsumerManager.Entities.Database
       await model.Customers.AddAsync(customer);
       await model.SaveChangesAsync();
     }
+
+    Task<Customer?> IDataServiceProvider.DeleteCustomerById(int id)
+    {
+      throw new NotImplementedException();
+    }
+
+    Task<Customer?> IDataServiceProvider.UpdatedCustomerById(Customer customer)
+    {
+      throw new NotImplementedException();
+    }
   }
 }
