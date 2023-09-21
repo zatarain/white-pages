@@ -27,7 +27,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       serviceMock = new(modelMock.Object);
     }
 
-    private Customer CreateTestCustomer()
+    private static Customer CreateTestCustomer()
     {
       return new()
       {
@@ -109,6 +109,22 @@ namespace ConsumerManager.Unit.Tests.Controllers
       actual?.Result.Should().BeOfType<BadRequestObjectResult>();
     }
 
+    [Fact]
+    public async Task Delete_ExistentCustomer_ReturnsSuccessWithNoContent()
+    {
+      var customer = CreateTestCustomer();
+
+      // Arrange
+      serviceMock.Setup(mock => mock.GetCustomerById(It.IsAny<int>())).ReturnsAsync(customer);
+      serviceMock.Setup(mock => mock.DeleteCustomer(It.IsAny<Customer>())).Returns(Task.CompletedTask);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Delete(1);
+
+      // Assert
+      actual?.Result.Should().BeOfType<NoContentResult>();
+    }
 
     [Fact]
     public async Task Delete_UnexistentCustomer_ReturnsNotFound()

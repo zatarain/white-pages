@@ -46,9 +46,11 @@ namespace ConsumerManager.Entities
     public required string Surname { get; init; }
 
     [MaxLength(75)]
+    [EmailAddress]
     public required string Email { get; init; }
 
     [MaxLength(15)]
+    [Phone]
     public required string Phone { get; init; }
 
     //public required virtual ICollection<Address> Addresses { get; set; }
