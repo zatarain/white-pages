@@ -139,5 +139,67 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual.Should().BeOfType<NotFoundResult>();
     }
+
+    [Fact]
+    public async Task Activate_ExistentCustomer_ReturnsActivatedCustomer()
+    {
+      // Arrange
+      var customer = CreateTestCustomer();
+      customer.IsActive = false;
+      serviceMock.Setup(mock => mock.UpdateCustomerStatus(It.IsAny<int>(), true)).ReturnsAsync(customer);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Activate(1);
+
+      // Assert
+      actual?.Result.Should().BeOfType<OkObjectResult>();
+      actual?.Value?.IsActive.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Activate_UnexistentCustomer_ReturnsNotFound()
+    {
+      // Arrange
+      serviceMock.Setup(mock => mock.UpdateCustomerStatus(It.IsAny<int>(), true)).ReturnsAsync(null as Customer);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Activate(4);
+
+      // Assert
+      actual?.Result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task Dectivate_ExistentCustomer_ReturnsActivatedCustomer()
+    {
+      // Arrange
+      var customer = CreateTestCustomer();
+      customer.IsActive = true;
+      serviceMock.Setup(mock => mock.UpdateCustomerStatus(It.IsAny<int>(), false)).ReturnsAsync(customer);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Deactivate(1);
+
+      // Assert
+      actual?.Result.Should().BeOfType<OkObjectResult>();
+      actual?.Value?.IsActive.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Deactivate_UnexistentCustomer_ReturnsNotFound()
+    {
+      // Arrange
+      serviceMock.Setup(mock => mock.UpdateCustomerStatus(It.IsAny<int>(), false)).ReturnsAsync(null as Customer);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Deactivate(4);
+
+      // Assert
+      actual?.Result.Should().BeOfType<NotFoundResult>();
+    }
   }
 }

@@ -98,7 +98,7 @@ namespace ConsumerManager.Controllers
       }
 
       logger.LogInformation("Customer was successfully deactivated.");
-      return customer;
+      return Ok(customer);
     }
 
     [HttpPatch("{id}/activate")]
@@ -112,7 +112,7 @@ namespace ConsumerManager.Controllers
       }
 
       logger.LogInformation("Customer was successfully activated.");
-      return customer;
+      return Ok(customer);
     }
   }
 }
