@@ -19,8 +19,13 @@ namespace ConsumerManager.Unit.Tests.Controllers
   public class CustomersControllerTest
   {
     private readonly Mock<ILogger<CustomersController>> loggerMock = new();
-    private readonly Mock<DbSet<Customer>>  customersMock = new();
-    private readonly Mock<RelationalModel> modelMock = new();
+    private readonly Mock<AsyncDataService> serviceMock;
+
+    public CustomersControllerTest()
+    {
+      var modelMock = new Mock<RelationalModel>();
+      serviceMock = new(modelMock.Object);
+    }
 
     private Customer CreateTestCustomer()
     {
@@ -38,7 +43,6 @@ namespace ConsumerManager.Unit.Tests.Controllers
       };
     }
 
-
     [Fact]
     public async Task ReadAll_Always_ReturnsListOfCustomers()
     {
@@ -46,14 +50,10 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var data = new List<Customer>
       {
         CreateTestCustomer(),
-      }.AsQueryable();
+      };
       
-      customersMock.As<IQueryable<Customer>>().Setup(mock => mock.Provider).Returns(data.Provider);
-      customersMock.As<IQueryable<Customer>>().Setup(mock => mock.Expression).Returns(data.Expression);
-      customersMock.As<IQueryable<Customer>>().Setup(mock => mock.ElementType).Returns(data.ElementType);
-      customersMock.As<IQueryable<Customer>>().Setup(mock => mock.GetEnumerator()).Returns(() => data.GetEnumerator());      
-      modelMock.Setup(mock => mock.Customers).Returns(customersMock.Object);      
-      var controller = new CustomersController(loggerMock.Object, modelMock.Object);
+      serviceMock.Setup(mock => mock.GetAllCustomers()).ReturnsAsync(data);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
 
       // Act
       var actual = await controller.ReadAll();
@@ -62,7 +62,6 @@ namespace ConsumerManager.Unit.Tests.Controllers
       actual.Should().NotBeNull();
       var customers = actual.Value;
       customers.Should().NotBeNull();
-      customers.Should().HaveCount(1);
       customers.Should().BeEquivalentTo(data.ToList());
     }
 
@@ -70,9 +69,8 @@ namespace ConsumerManager.Unit.Tests.Controllers
     public async Task Read_UnexistentCustomer_ReturnsNotFound()
     {
       // Arrange
-      customersMock.Setup(mock => mock.FindAsync(It.IsAny<int>())).ReturnsAsync(null as Customer);
-      modelMock.Setup(mock => mock.Customers).Returns(customersMock.Object);
-      var controller = new CustomersController(loggerMock.Object, modelMock.Object);
+      serviceMock.Setup(mock => mock.GetCustomerById(It.IsAny<int>())).ReturnsAsync(null as Customer);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
 
       // Act
       var actual = await controller.Read(2);
@@ -86,9 +84,8 @@ namespace ConsumerManager.Unit.Tests.Controllers
     {
       // Arrange
       var customer = CreateTestCustomer();
-      customersMock.Setup(mock => mock.FindAsync(It.IsAny<int>())).ReturnsAsync(customer);
-      modelMock.Setup(mock => mock.Customers).Returns(customersMock.Object);
-      var controller = new CustomersController(loggerMock.Object, modelMock.Object);
+      serviceMock.Setup(mock => mock.GetCustomerById(It.IsAny<int>())).ReturnsAsync(customer);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
 
       // Act
       var actual = await controller.Read(1);
@@ -102,7 +99,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
     public async Task Create_WithNullInputData_ReturnsBadrequest()
     {
       // Arrange
-      var controller = new CustomersController(loggerMock.Object, modelMock.Object);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
 
       // Act
       var actual = await controller.Create(null);
@@ -110,5 +107,6 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual?.Result.Should().BeOfType<BadRequestObjectResult>();
     }
+    /**/
   }
 }

@@ -13,26 +13,26 @@ namespace ConsumerManager.Controllers
   {
     private readonly ILogger<CustomersController> logger;
 
-    private readonly RelationalModel model;
+    private readonly IDataServiceProvider service;
 
-    public CustomersController(ILogger<CustomersController> logger, RelationalModel model)
+    public CustomersController(ILogger<CustomersController> logger, IDataServiceProvider service)
     {
       this.logger = logger;
-      this.model = model;
+      this.service = service;
     }
 
     [HttpGet] // GET /customers
     public async Task<ActionResult<List<Customer>>> ReadAll()
     {
       logger.LogInformation("Getting list of customers");
-      return await Task.FromResult(model.Customers.ToList());
+      return await service.GetAllCustomers();
     }
 
     [HttpGet("{id}")] // GET /customers/{id}
     public async Task<ActionResult<Customer>> Read(int id)
     {
       logger.LogInformation("Getting a single customer");
-      var customer = await model.Customers.FindAsync(id);
+      var customer = await service.GetCustomerById(id);
       if (customer is null)
       {
         return NotFound();
@@ -48,12 +48,7 @@ namespace ConsumerManager.Controllers
         return BadRequest("You need to provide data for new customer.");
       }
 
-      var existing = await model.Customers.FirstOrDefaultAsync(
-        customer => customer.Email == contract.Email.ToLower()
-        || customer.Phone == contract.Phone
-      );
-
-      if (existing is not null)
+      if (await service.CustomerExists(contract.Email, contract.Phone))
       {
         return BadRequest($"A customer with the email '{contract.Email}' and/or phone '{contract.Phone}' already exists.");
       }
@@ -69,9 +64,8 @@ namespace ConsumerManager.Controllers
         LastUpdatedAt = DateTime.UtcNow,
       };
 
-      await model.AddAsync(customer);
-      await model.SaveChangesAsync();
       logger.LogInformation($"Created new customer with Id = {customer.Id}");
+      await service.CreateCustomer( customer );
       return CreatedAtAction(nameof(Read), new { id = customer.Id }, customer);
     }
   }

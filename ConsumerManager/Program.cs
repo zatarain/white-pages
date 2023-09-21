@@ -9,6 +9,7 @@ builder.Configuration.AddEnvironmentVariables();
 // Add database connection and context.
 var postgres = builder.Configuration.GetSection("Postgres").Get<PostgresConnection>();
 builder.Services.AddDbContext<RelationalModel>(options => options.UseNpgsql(postgres?.ToString()));
+builder.Services.AddScoped<IDataServiceProvider, AsyncDataService>();
 
 // Add services to the container.
 builder.Services.AddControllers();
