@@ -105,7 +105,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       serviceMock.Setup(mock => mock.CreateCustomer(It.IsAny<Customer>())).Returns(Task.CompletedTask);
       var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
       
-      CreateCustomerContract request = new()
+      CreateCustomerRequest request = new()
       {
         Title = "Mr.",
         Forename = "New",
@@ -146,7 +146,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Arrange
       serviceMock.Setup(mock => mock.CustomerExists(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
       var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
-      CreateCustomerContract request = new() {
+      CreateCustomerRequest request = new() {
         Title = "Mr.",
         Forename = "New",
         Surname = "Customer",

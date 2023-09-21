@@ -9,24 +9,24 @@ namespace ConsumerManager.Entities
     public int? Id { get; set; }
 
     [MaxLength(20)]
-    public required string Title { get; set; }
+    public string? Title { get; set; }
     
     [MaxLength(50)]
-    public required string Forename { get; set; }
+    public string? Forename { get; set; }
     
     [MaxLength(50)]
-    public required string Surname { get; set; }
+    public string? Surname { get; set; }
     
     [MaxLength(75)]
     [EmailAddress]
-    public required string Email { get; set; }
+    public string? Email { get; set; }
     
     [MaxLength(15)]
     [Phone]
-    public required string Phone { get; set; }
+    public string? Phone { get; set; }
 
     [DefaultValue(true)]
-    public required bool IsActive { get; set; }
+    public bool IsActive { get; set; }
 
     public virtual ICollection<Address>? Addresses { get; set; }
 
@@ -34,24 +34,29 @@ namespace ConsumerManager.Entities
     public virtual DateTime LastUpdatedAt { get; set; }
   }
 
-  public record CreateCustomerContract
+  public record CreateCustomerRequest
   {
     [MaxLength(20)]
-    public required string Title { get; init; }
+    [Required]
+    public string? Title { get; init; }
 
     [MaxLength(50)]
-    public required string Forename { get; init; }
+    [Required]
+    public string? Forename { get; init; }
 
     [MaxLength(50)]
-    public required string Surname { get; init; }
+    [Required]
+    public string? Surname { get; init; }
 
     [MaxLength(75)]
     [EmailAddress]
-    public required string Email { get; init; }
+    [Required]
+    public string? Email { get; init; }
 
     [MaxLength(15)]
     [Phone]
-    public required string Phone { get; init; }
+    [Required]
+    public string? Phone { get; init; }
 
     //public required virtual ICollection<Address> Addresses { get; set; }
   }
