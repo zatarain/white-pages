@@ -123,7 +123,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var actual = await controller.Delete(1);
 
       // Assert
-      actual?.Result.Should().BeOfType<NoContentResult>();
+      actual.Should().BeOfType<NoContentResult>();
     }
 
     [Fact]
@@ -137,7 +137,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var actual = await controller.Delete(4);
 
       // Assert
-      actual?.Result.Should().BeOfType<NotFoundResult>();
+      actual.Should().BeOfType<NotFoundResult>();
     }
   }
 }

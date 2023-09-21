@@ -48,5 +48,16 @@ namespace ConsumerManager.Entities.Database
     {
       throw new NotImplementedException();
     }
+
+    public virtual async Task<Customer?> UpdateCustomerStatus(int id, bool isActive)
+    {
+      var customer = await GetCustomerById(id);
+      if (customer is not null)
+      {
+        customer.IsActive = isActive;
+        await model.SaveChangesAsync();
+      }
+      return customer;
+    }
   }
 }

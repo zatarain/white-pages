@@ -73,7 +73,7 @@ namespace ConsumerManager.Controllers
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Customer>> Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
       logger.LogInformation("Deleting customer");
       var customer = await service.GetCustomerById(id);
@@ -85,6 +85,34 @@ namespace ConsumerManager.Controllers
       await service.DeleteCustomer(customer);
       logger.LogInformation("Customer was removed successfully from database.");
       return NoContent();
+    }
+
+    [HttpPatch("{id}/deactivate")]
+    public async Task<ActionResult<Customer>> Deactivate(int id)
+    {
+      logger.LogInformation("Deactivating customer");
+      var customer = await service.UpdateCustomerStatus(id, false);
+      if (customer is null)
+      {
+        return NotFound();
+      }
+
+      logger.LogInformation("Customer was successfully deactivated.");
+      return customer;
+    }
+
+    [HttpPatch("{id}/activate")]
+    public async Task<ActionResult<Customer>> Activate(int id)
+    {
+      logger.LogInformation("Activating customer");
+      var customer = await service.UpdateCustomerStatus(id, true);
+      if (customer is null)
+      {
+        return NotFound();
+      }
+
+      logger.LogInformation("Customer was successfully activated.");
+      return customer;
     }
   }
 }

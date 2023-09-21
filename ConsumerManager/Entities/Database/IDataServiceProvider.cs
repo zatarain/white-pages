@@ -8,5 +8,7 @@
     public Task<Customer?> GetCustomerById(int id);
     public Task DeleteCustomer(Customer customer);
     public Task UpdateCustomer(Customer customer);
+
+    public Task<Customer?> UpdateCustomerStatus(int id, bool isActive);
   }
 }
