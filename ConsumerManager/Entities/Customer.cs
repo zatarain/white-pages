@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ConsumerManager.Entities
@@ -17,15 +18,18 @@ namespace ConsumerManager.Entities
     public required string Surname { get; set; }
     
     [MaxLength(75)]
+    [EmailAddress]
     public required string Email { get; set; }
     
     [MaxLength(15)]
+    [Phone]
     public required string Phone { get; set; }
 
+    [DefaultValue(true)]
     public required bool IsActive { get; set; }
 
     public virtual ICollection<Address>? Addresses { get; set; }
-    
+
     public virtual DateTime CreatedAt { get; set; }
     public virtual DateTime LastUpdatedAt { get; set; }
   }

@@ -73,7 +73,7 @@ namespace ConsumerManager.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("ConsumerManager.Entities.Customer", b =>
@@ -120,7 +120,7 @@ namespace ConsumerManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("ConsumerManager.Entities.Address", b =>
