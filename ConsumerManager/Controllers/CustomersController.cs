@@ -40,7 +40,7 @@ namespace ConsumerManager.Controllers
       return customer;
     }
     [HttpPost]
-    public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerContract contract)
+    public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerContract? contract)
     {
       logger.LogInformation("Trying to add a new customer");
       if (contract is null)

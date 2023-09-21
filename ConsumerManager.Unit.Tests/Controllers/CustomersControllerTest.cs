@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using ConsumerManager.Entities;
@@ -116,5 +117,26 @@ namespace ConsumerManager.Unit.Tests.Controllers
       actual.Should().NotBeNull();
       actual.Value.Should().BeEquivalentTo(customer, options => options.ComparingByMembers<Customer>());
     }
-  }
+
+  [Fact]
+  public async Task Create_WithNullInputData_ReturnsBadrequest()
+  {
+    // Arrange
+    var loggerMock = new Mock<ILogger<CustomersController>>();
+
+    var customersMock = new Mock<DbSet<Customer>>();
+    // customersMock.Setup(mock => mock.FirstOrDefaultAsync(It.IsAny<Expression<Func<Customer, bool>>>())).ReturnsAsync(null);
+
+    var modelMock = new Mock<RelationalModel>();
+    modelMock.Setup(mock => mock.Customers).Returns(customersMock.Object);
+
+    var controller = new CustomersController(loggerMock.Object, modelMock.Object);
+
+    // Act
+    var actual = await controller.Create(null);
+
+      // Assert
+      actual?.Result.Should().BeOfType<BadRequestObjectResult>();
+    }
+}
 }
