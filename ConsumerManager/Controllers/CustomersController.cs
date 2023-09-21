@@ -42,7 +42,7 @@ namespace ConsumerManager.Controllers
     [HttpPost]
     public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerContract? contract)
     {
-      logger.LogInformation("Trying to add a new customer");
+      logger.LogInformation("Trying to create a new customer");
       if (contract is null)
       {
         return BadRequest("You need to provide data for new customer.");
@@ -64,7 +64,7 @@ namespace ConsumerManager.Controllers
         LastUpdatedAt = DateTime.UtcNow,
       };
 
-      logger.LogInformation($"Created new customer with Id = {customer.Id}");
+      logger.LogInformation("New customer created successfully.");
       await service.CreateCustomer( customer );
       return CreatedAtAction(nameof(Read), new { id = customer.Id }, customer);
     }
