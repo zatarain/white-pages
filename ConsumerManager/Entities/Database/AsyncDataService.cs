@@ -38,12 +38,13 @@ namespace ConsumerManager.Entities.Database
       await model.SaveChangesAsync();
     }
 
-    Task<Customer?> IDataServiceProvider.DeleteCustomerById(int id)
+    public virtual async Task DeleteCustomer(Customer customer)
     {
-      throw new NotImplementedException();
+      model.Customers.Remove(customer);
+      await model.SaveChangesAsync();
     }
 
-    Task<Customer?> IDataServiceProvider.UpdatedCustomerById(Customer customer)
+    public virtual Task UpdateCustomer(Customer customer)
     {
       throw new NotImplementedException();
     }

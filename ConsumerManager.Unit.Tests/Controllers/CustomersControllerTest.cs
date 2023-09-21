@@ -108,5 +108,20 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual?.Result.Should().BeOfType<BadRequestObjectResult>();
     }
+
+
+    [Fact]
+    public async Task Delete_UnexistentCustomer_ReturnsNotFound()
+    {
+      // Arrange
+      serviceMock.Setup(mock => mock.GetCustomerById(It.IsAny<int>())).ReturnsAsync(null as Customer);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Delete(4);
+
+      // Assert
+      actual?.Result.Should().BeOfType<NotFoundResult>();
+    }
   }
 }

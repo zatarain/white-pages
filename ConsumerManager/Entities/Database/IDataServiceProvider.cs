@@ -2,11 +2,11 @@
 {
   public interface IDataServiceProvider
   {
-    Task CreateCustomer(Customer customer);
-    Task<bool> CustomerExists(string email, string phone);
-    Task<List<Customer>> GetAllCustomers();
-    Task<Customer?> GetCustomerById(int id);
-    Task<Customer?> DeleteCustomerById(int id);
-    Task<Customer?> UpdatedCustomerById(Customer customer);
+    public Task CreateCustomer(Customer customer);
+    public Task<bool> CustomerExists(string email, string phone);
+    public Task<List<Customer>> GetAllCustomers();
+    public Task<Customer?> GetCustomerById(int id);
+    public Task DeleteCustomer(Customer customer);
+    public Task UpdateCustomer(Customer customer);
   }
 }

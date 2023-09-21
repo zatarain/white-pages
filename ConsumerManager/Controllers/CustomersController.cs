@@ -40,6 +40,7 @@ namespace ConsumerManager.Controllers
       }
       return Ok(customer);
     }
+    
     [HttpPost]
     public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerContract? contract)
     {
@@ -66,9 +67,24 @@ namespace ConsumerManager.Controllers
         LastUpdatedAt = DateTime.UtcNow,
       };
 
-      logger.LogInformation("New customer created successfully.");
       await service.CreateCustomer( customer );
+      logger.LogInformation("New customer created successfully.");
       return CreatedAtAction(nameof(Read), new { id = customer.Id }, customer);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Customer>> Delete(int id)
+    {
+      logger.LogInformation("Deleting customer");
+      var customer = await service.GetCustomerById(id);
+      if (customer is null)
+      {
+        return NotFound();
+      }
+      
+      await service.DeleteCustomer(customer);
+      logger.LogInformation("Customer was removed successfully from database.");
+      return NoContent();
     }
   }
 }
