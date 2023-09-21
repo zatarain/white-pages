@@ -29,6 +29,14 @@ namespace ConsumerManager.Controllers
       return Ok(customers);
     }
 
+    [HttpGet("only-active")] // GET /customers/only-active
+    public async Task<ActionResult<List<Customer>>> GetActive()
+    {
+      logger.LogInformation("Getting list of active customers");
+      var customers = await service.GetOnlyActiveCustomers();
+      return Ok(customers);
+    }
+
     [HttpGet("{id}")] // GET /customers/{id}
     public async Task<ActionResult<Customer>> Read(int id)
     {
@@ -41,7 +49,7 @@ namespace ConsumerManager.Controllers
       return Ok(customer);
     }
     
-    [HttpPost]
+    [HttpPost] // POST /customers
     public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerRequest request)
     {
       logger.LogInformation("Trying to create a new customer");
@@ -72,7 +80,7 @@ namespace ConsumerManager.Controllers
       return CreatedAtAction(nameof(Read), new { id = customer.Id }, customer);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}")] // DELETE /customers/{id}
     public async Task<ActionResult> Delete(int id)
     {
       logger.LogInformation("Deleting customer");
@@ -87,7 +95,7 @@ namespace ConsumerManager.Controllers
       return NoContent();
     }
 
-    [HttpPatch("{id}/deactivate")]
+    [HttpPatch("{id}/deactivate")] // PATCH /customers/{id}/deactivate
     public async Task<ActionResult<Customer>> Deactivate(int id)
     {
       logger.LogInformation("Deactivating customer");
@@ -101,7 +109,7 @@ namespace ConsumerManager.Controllers
       return Ok(customer);
     }
 
-    [HttpPatch("{id}/activate")]
+    [HttpPatch("{id}/activate")] // PATCH /customers/{id}/activate
     public async Task<ActionResult<Customer>> Activate(int id)
     {
       logger.LogInformation("Activating customer");

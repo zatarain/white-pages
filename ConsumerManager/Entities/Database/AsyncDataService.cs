@@ -17,6 +17,12 @@ namespace ConsumerManager.Entities.Database
       return customers;
     }
 
+    public virtual async Task<List<Customer>> GetOnlyActiveCustomers()
+    {
+      var customers = await model.Customers.Where(customer => customer.IsActive).ToListAsync();
+      return customers;
+    }
+
     public virtual async Task<Customer?> GetCustomerById(int id)
     {
       var customer = await model.Customers.FindAsync(id);
