@@ -34,7 +34,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
         Id = 1,
         Title = "Mr.",
         Forename = "John",
-        Surename = "Smith",
+        Surname = "Smith",
         Email = "john.smith@gmail.com",
         Phone = "+4407111111111",
         Addresses = new List<Address>(),

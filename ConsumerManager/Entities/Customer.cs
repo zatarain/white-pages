@@ -14,7 +14,7 @@ namespace ConsumerManager.Entities
     public required string Forename { get; set; }
     
     [MaxLength(50)]
-    public required string Surename { get; set; }
+    public required string Surname { get; set; }
     
     [MaxLength(75)]
     public required string Email { get; set; }
@@ -37,7 +37,7 @@ namespace ConsumerManager.Entities
     public required string Forename { get; init; }
 
     [MaxLength(50)]
-    public required string Surename { get; init; }
+    public required string Surname { get; init; }
 
     [MaxLength(75)]
     public required string Email { get; init; }

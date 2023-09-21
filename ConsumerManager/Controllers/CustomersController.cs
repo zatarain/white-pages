@@ -57,7 +57,7 @@ namespace ConsumerManager.Controllers
       {
         Title = contract.Title,
         Forename = contract.Forename,
-        Surename = contract.Surename,
+        Surname = contract.Surname,
         Email = contract.Email.ToLower(),
         Phone = contract.Phone,
         CreatedAt = DateTime.UtcNow,
