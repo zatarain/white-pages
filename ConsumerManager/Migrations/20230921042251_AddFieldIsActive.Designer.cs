@@ -3,6 +3,7 @@ using System;
 using ConsumerManager.Entities.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConsumerManager.Migrations
 {
     [DbContext(typeof(RelationalModel))]
-    partial class RelationalModelModelSnapshot : ModelSnapshot
+    [Migration("20230921042251_AddFieldIsActive")]
+    partial class AddFieldIsActive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

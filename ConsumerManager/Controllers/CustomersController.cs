@@ -60,6 +60,7 @@ namespace ConsumerManager.Controllers
         Surname = contract.Surname,
         Email = contract.Email.ToLower(),
         Phone = contract.Phone,
+        IsActive = true,
         CreatedAt = DateTime.UtcNow,
         LastUpdatedAt = DateTime.UtcNow,
       };

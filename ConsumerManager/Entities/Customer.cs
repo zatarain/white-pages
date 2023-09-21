@@ -22,6 +22,8 @@ namespace ConsumerManager.Entities
     [MaxLength(15)]
     public required string Phone { get; set; }
 
+    public required bool IsActive { get; set; }
+
     public virtual ICollection<Address>? Addresses { get; set; }
     
     public virtual DateTime CreatedAt { get; set; }
