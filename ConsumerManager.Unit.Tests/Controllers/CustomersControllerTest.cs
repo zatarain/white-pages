@@ -13,6 +13,7 @@ using Castle.Core.Resource;
 using System.Reflection.Metadata;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Contracts;
 
 namespace ConsumerManager.Unit.Tests.Controllers
 {
@@ -107,6 +108,28 @@ namespace ConsumerManager.Unit.Tests.Controllers
 
       // Assert
       actual?.Result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    [Fact]
+    public async Task Create_WithExistentData_ReturnsBadrequest()
+    {
+      // Arrange
+      serviceMock.Setup(mock => mock.CustomerExists(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+      CreateCustomerContract request = new() {
+        Title = "Mr.",
+        Forename = "New",
+        Surname = "Customer",
+        Email = "john.smith@gmail.com",
+        Phone = "+4407111222333",
+      };
+
+      // Act
+      var actual = await controller.Create(request);
+
+      // Assert
+      actual?.Result.Should().BeOfType<BadRequestObjectResult>();
+      actual?.Value?.Should().Be($"A customer with the email '{request.Email}' and/or phone '{request.Phone}' already exists.");
     }
 
     [Fact]
