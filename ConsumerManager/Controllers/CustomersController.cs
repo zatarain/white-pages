@@ -63,6 +63,7 @@ namespace ConsumerManager.Controllers
         return BadRequest($"A customer with the email '{request.Email}' and/or phone '{request.Phone}' already exists.");
       }
 
+      var now = DateTime.UtcNow;
       var customer = new Customer
       {
         Title = request.Title,
@@ -71,8 +72,8 @@ namespace ConsumerManager.Controllers
         Email = request.Email.ToLower(),
         Phone = request.Phone,
         IsActive = true,
-        CreatedAt = DateTime.UtcNow,
-        LastUpdatedAt = DateTime.UtcNow,
+        CreatedAt = now,
+        LastUpdatedAt = now,
       };
 
       await service.CreateCustomer( customer );

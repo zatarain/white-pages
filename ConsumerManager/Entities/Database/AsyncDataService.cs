@@ -70,5 +70,11 @@ namespace ConsumerManager.Entities.Database
       }
       return customer;
     }
+
+    public virtual async Task CreateAddress(Address address)
+    {
+      await model.Addresses.AddAsync(address);
+      await model.SaveChangesAsync();
+    }
   }
 }

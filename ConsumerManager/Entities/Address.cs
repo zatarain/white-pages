@@ -5,31 +5,60 @@ namespace ConsumerManager.Entities
 {
   public record Address
   {
-    public required int Id { get; init; }
-    
+    public int? Id { get; set; }
+
     [MaxLength(80)]
-    public required string Line1 { get; init; }
+    public string? Line1 { get; set; }
 
     [AllowNull]
     [MaxLength(80)]
-    public string Line2 { get; init; }
-    
+    public string? Line2 { get; set; }
+
     [MaxLength(50)]
-    public required string Town{ get; init; }
-    
+    public string? Town { get; set; }
+
     [AllowNull]
     [MaxLength(50)]
-    public string County { get; set;}
+    public string? County { get; set; }
 
     [MaxLength(10)]
-    public required string Postcode { get; init; }
+    public string? Postcode { get; set; }
 
     [MaxLength(2)]
-    public required string Country { get; init; }
+    public string? Country { get; set; }
 
-    public required int CustomerId { get; init; }
+    public int? CustomerId { get; set; }
 
-    public virtual DateTime CreatedAt { get; init; }
-    public virtual DateTime LastUpdatedAt { get; init; }
+    public virtual DateTime CreatedAt { get; set; }
+    public virtual DateTime LastUpdatedAt { get; set; }
+  }
+
+  public record CreateAddressRequest
+  {
+    [MaxLength(80)]
+    [Required]
+    public string? Line1 { get; init; }
+
+    [AllowNull]
+    [MaxLength(80)]
+    public string? Line2 { get; init; }
+
+    [MaxLength(50)]
+    [Required]
+    public string? Town { get; init; }
+
+    [AllowNull]
+    [MaxLength(50)]
+    public string? County { get; init; }
+
+    [MaxLength(10)]
+    [Required]
+    public string? Postcode { get; init; }
+
+    [MaxLength(2)]
+    public string? Country { get; init; }
+
+    [Required]
+    public int? CustomerId { get; init; }
   }
 }
