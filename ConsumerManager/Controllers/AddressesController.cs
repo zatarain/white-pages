@@ -84,6 +84,13 @@ namespace ConsumerManager.Controllers
       var address = customer.Addresses?.First(address => address.Id == id);
       await service.DeleteAddress(address);
 
+      if (customer.MainAddressId == id)
+      {
+        var addressId = customer.Addresses?.FirstOrDefault(address => address.Id != id)?.Id;
+        customer.MainAddressId = addressId ?? 0;
+        await service.UpdateCustomer(customer);
+      }
+
       logger.LogInformation("Address successfully deleted.");
       return NoContent();
     }

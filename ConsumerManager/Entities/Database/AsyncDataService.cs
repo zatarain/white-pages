@@ -55,9 +55,10 @@ namespace ConsumerManager.Entities.Database
       await model.SaveChangesAsync();
     }
 
-    public virtual Task UpdateCustomer(Customer customer)
-    {
-      throw new NotImplementedException();
+    public virtual async Task UpdateCustomer(Customer customer)
+    {      
+      model.Customers.Update(customer);
+      await model.SaveChangesAsync();
     }
 
     public virtual async Task<Customer?> UpdateCustomerStatus(int id, bool isActive)
