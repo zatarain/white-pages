@@ -28,7 +28,9 @@ namespace ConsumerManager.Entities.Database
 
     public virtual async Task<Customer?> GetCustomerById(int id)
     {
-      var customer = await model.Customers.FindAsync(id);
+      var customer = await model.Customers
+        .Include(customer => customer.Addresses)
+        .FirstOrDefaultAsync(customer => customer.Id == id);
       return customer;
     }
 
