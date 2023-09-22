@@ -1,0 +1,3 @@
+ignore:
+  - "**/Migrations/*.cs"
+  - "**/Entities/Database/*.cs"

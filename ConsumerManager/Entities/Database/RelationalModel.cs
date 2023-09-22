@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ConsumerManager.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 namespace ConsumerManager.Entities.Database
 {
   public class RelationalModel : DbContext
   {
-    public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+    public virtual DbSet<Customer> Customers { get; set; }
+    public virtual DbSet<Address> Addresses { get; set; }
 
     public RelationalModel() : base()
     {
@@ -17,11 +20,11 @@ namespace ConsumerManager.Entities.Database
 
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-      base.OnModelCreating(modelBuilder);
-      modelBuilder.Entity<WeatherForecast>().HasNoKey();
-      //.HasOne(m => m.Publisher).WithMany(m => m.Books);
+      base.OnModelCreating(builder);
+      builder.Entity<Customer>(customer => customer.HasMany(customer => customer.Addresses));
+      builder.Entity<Address>(address => address.HasIndex(address => address.CustomerId));
     }
   }
 }
