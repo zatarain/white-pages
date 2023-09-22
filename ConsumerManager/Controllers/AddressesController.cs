@@ -20,6 +20,17 @@ namespace ConsumerManager.Controllers
       this.service = service;
     }
 
+    [HttpGet("{id}")] // GET /addresses/{id}
+    public async Task<ActionResult<Customer>> Read(int id)
+    {
+      var customer = await service.GetCustomerByAddressId(id);
+      if (customer is null)
+      {
+        return NotFound();
+      }
+      return Ok(customer);
+    }
+
     [HttpPost] // POST /addresses
     public async Task<ActionResult<Address>> Create([FromBody] CreateAddressRequest request)
     {
@@ -51,7 +62,7 @@ namespace ConsumerManager.Controllers
 
       await service.CreateAddress(address);
       logger.LogInformation("New address created successfully.");
-      return CreatedAtAction("/customers", new { id = customer.Id }, customer);
+      return CreatedAtAction(nameof(Read), new { id = address.Id }, address);
     }
 
     [HttpDelete("{id}")] // DELETE /addresses/5
