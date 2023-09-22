@@ -13,13 +13,16 @@ namespace ConsumerManager.Entities.Database
 
     public virtual async Task<List<Customer>> GetAllCustomers()
     {
-      var customers = await model.Customers.ToListAsync();
+      var customers = await model.Customers
+        .Include(customer => customer.Addresses).ToListAsync();
       return customers;
     }
 
     public virtual async Task<List<Customer>> GetOnlyActiveCustomers()
     {
-      var customers = await model.Customers.Where(customer => customer.IsActive).ToListAsync();
+      var customers = await model.Customers
+        .Include(customer => customer.Addresses)
+        .Where(customer => customer.IsActive).ToListAsync();
       return customers;
     }
 

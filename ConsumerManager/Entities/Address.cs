@@ -27,7 +27,7 @@ namespace ConsumerManager.Entities
     [MaxLength(2)]
     public required string Country { get; init; }
 
-    public virtual required Customer Customer { get; init; }
+    public required int CustomerId { get; init; }
 
     public virtual DateTime CreatedAt { get; init; }
     public virtual DateTime LastUpdatedAt { get; init; }

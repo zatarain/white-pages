@@ -23,7 +23,8 @@ namespace ConsumerManager.Entities.Database
     protected override void OnModelCreating(ModelBuilder builder)
     {
       base.OnModelCreating(builder);
-      builder.Entity<Address>().HasOne(model => model.Customer).WithMany(model => model.Addresses);
+      builder.Entity<Customer>(customer => customer.HasMany(customer => customer.Addresses));
+      builder.Entity<Address>(address => address.HasIndex(address => address.CustomerId));
     }
   }
 }
