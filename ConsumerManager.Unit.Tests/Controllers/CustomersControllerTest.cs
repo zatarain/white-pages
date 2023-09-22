@@ -61,7 +61,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
     }
 
     [Fact]
-    public async Task ReadAll_Always_ReturnsListOfCustomers()
+    public async Task GetActive_Always_ReturnsListOfActiveCustomers()
     {
       // Arrange
       var data = new List<Customer>
@@ -69,6 +69,27 @@ namespace ConsumerManager.Unit.Tests.Controllers
         CreateTestCustomer(),
       };
       
+      serviceMock.Setup(mock => mock.GetOnlyActiveCustomers()).ReturnsAsync(data);
+      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.GetActive();
+
+      // Assert
+      actual.Result.Should().BeOfType<OkObjectResult>();
+      var result = actual.Result as OkObjectResult;
+      result?.Value.Should().BeEquivalentTo(data.ToList());
+    }
+
+    [Fact]
+    public async Task ReadAll_Always_ReturnsListOfCustomers()
+    {
+      // Arrange
+      var data = new List<Customer>
+      {
+        CreateTestCustomer(),
+      };
+
       serviceMock.Setup(mock => mock.GetAllCustomers()).ReturnsAsync(data);
       var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
 
@@ -80,7 +101,6 @@ namespace ConsumerManager.Unit.Tests.Controllers
       var result = actual.Result as OkObjectResult;
       result?.Value.Should().BeEquivalentTo(data.ToList());
     }
-
     [Fact]
     public async Task Read_UnexistentCustomer_ReturnsNotFound()
     {
