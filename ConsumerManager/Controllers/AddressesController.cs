@@ -55,8 +55,26 @@ namespace ConsumerManager.Controllers
     }
 
     [HttpDelete("{id}")] // DELETE /addresses/5
-    public void Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
+      logger.LogInformation("Deleting address.");
+      var customer = await service.GetCustomerByAddressId(id);
+      if (customer is null)
+      {
+        return NotFound();
+      }
+
+      if (customer.Addresses?.Count <= 1)
+      {
+        logger.LogInformation("Customer dons't have enough addresses to delete.");
+        return BadRequest("Cannot delete the last address of the customer.");
+      }
+
+      var address = customer.Addresses?.First(address => address.Id == id);
+      await service.DeleteAddress(address);
+
+      logger.LogInformation("Address successfully deleted.");
+      return NoContent();
     }
   }
 }

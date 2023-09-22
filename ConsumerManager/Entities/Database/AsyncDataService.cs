@@ -71,9 +71,23 @@ namespace ConsumerManager.Entities.Database
       return customer;
     }
 
+    public virtual async Task<Customer?> GetCustomerByAddressId(int id)
+    {
+      var address = await model.Addresses
+        .FirstOrDefaultAsync(address => address.Id == id);
+      var customer = await GetCustomerById(address?.CustomerId ?? 0);
+      return customer;
+    }
+
     public virtual async Task CreateAddress(Address address)
     {
       await model.Addresses.AddAsync(address);
+      await model.SaveChangesAsync();
+    }
+
+    public virtual async Task DeleteAddress(Address address)
+    {
+      model.Addresses.Remove(address);
       await model.SaveChangesAsync();
     }
   }

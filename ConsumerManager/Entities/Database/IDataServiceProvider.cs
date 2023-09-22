@@ -10,6 +10,8 @@
     public Task DeleteCustomer(Customer customer);
     public Task UpdateCustomer(Customer customer);
     public Task<Customer?> UpdateCustomerStatus(int id, bool isActive);
-    public Task CreateAddress(Address address);
+    public Task<Customer?> GetCustomerByAddressId(int id);
+    public Task CreateAddress(Address address);    
+    public Task DeleteAddress(Address address);
   }
 }
