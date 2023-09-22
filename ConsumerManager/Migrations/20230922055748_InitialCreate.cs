@@ -18,11 +18,13 @@ namespace ConsumerManager.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Forename = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Surename = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "character varying(75)", maxLength: 75, nullable: false),
-                    Phone = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    Title = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Forename = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Surname = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Email = table.Column<string>(type: "character varying(75)", maxLength: 75, nullable: true),
+                    Phone = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    MainAddressId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -37,13 +39,13 @@ namespace ConsumerManager.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Line1 = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    Line2 = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    Town = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    County = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Postcode = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Country = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: false),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    Line1 = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: true),
+                    Line2 = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: true),
+                    Town = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    County = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Postcode = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    Country = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: true),
+                    CustomerId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -54,8 +56,7 @@ namespace ConsumerManager.Migrations
                         name: "FK_Addresses_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

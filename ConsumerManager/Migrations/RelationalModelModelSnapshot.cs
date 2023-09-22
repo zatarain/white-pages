@@ -24,48 +24,42 @@ namespace ConsumerManager.Migrations
 
             modelBuilder.Entity("ConsumerManager.Entities.Address", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasMaxLength(2)
                         .HasColumnType("character varying(2)");
 
                     b.Property<string>("County")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Line1")
-                        .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
 
                     b.Property<string>("Line2")
-                        .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
 
                     b.Property<string>("Postcode")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
                     b.Property<string>("Town")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -73,7 +67,7 @@ namespace ConsumerManager.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ConsumerManager.Entities.Customer", b =>
@@ -88,12 +82,10 @@ namespace ConsumerManager.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(75)
                         .HasColumnType("character varying(75)");
 
                     b.Property<string>("Forename")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -103,35 +95,31 @@ namespace ConsumerManager.Migrations
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("MainAddressId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("ConsumerManager.Entities.Address", b =>
                 {
-                    b.HasOne("ConsumerManager.Entities.Customer", "Customer")
+                    b.HasOne("ConsumerManager.Entities.Customer", null)
                         .WithMany("Addresses")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
+                        .HasForeignKey("CustomerId");
                 });
 
             modelBuilder.Entity("ConsumerManager.Entities.Customer", b =>
