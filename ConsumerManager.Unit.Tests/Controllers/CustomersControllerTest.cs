@@ -30,6 +30,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
 
     private static Customer CreateTestCustomer()
     {
+      var now = DateTime.UtcNow;
       return new()
       {
         Id = 1,
@@ -39,9 +40,23 @@ namespace ConsumerManager.Unit.Tests.Controllers
         Email = "john.smith@example.com",
         Phone = "+4407111222333",
         IsActive = true,
-        Addresses = new List<Address>(),
-        CreatedAt = DateTime.Now,
-        LastUpdatedAt = DateTime.Now,
+        Addresses = new List<Address>() {
+          new()
+          {
+            Id = 4,
+            CustomerId = 1,
+            Line1 = "Flat 101",
+            Line2 = "Gainsborough House, Cassilis Road",
+            Town = "London",
+            County = "-",
+            Postcode = "E14 9LR",
+            Country = "GB",
+            CreatedAt = now,
+            LastUpdatedAt = now,
+          }
+        },
+        CreatedAt = now,
+        LastUpdatedAt = now,
       };
     }
 
