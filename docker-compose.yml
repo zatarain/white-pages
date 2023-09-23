@@ -9,7 +9,6 @@ services:
       dockerfile: ConsumerManager/Dockerfile
     ports:
       - "7080:80"
-      - "7000:443"
     depends_on:
       database:
         condition: service_healthy
@@ -38,7 +37,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
 volumes:
