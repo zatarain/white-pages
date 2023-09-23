@@ -64,12 +64,14 @@ namespace ConsumerManager.Entities.Database
     public virtual async Task<Customer?> UpdateCustomerStatus(int id, bool isActive)
     {
       var customer = await GetCustomerById(id);
-      if (customer is not null)
+      if (customer is null)
       {
-        customer.IsActive = isActive;
-        await model.SaveChangesAsync();
+        return customer;
       }
-      return customer;
+
+      Customer updated = customer with { IsActive = isActive };
+      await model.SaveChangesAsync();
+      return updated;
     }
 
     public virtual async Task<Customer?> GetCustomerByAddressId(int id)

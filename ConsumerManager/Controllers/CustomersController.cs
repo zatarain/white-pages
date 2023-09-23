@@ -66,12 +66,14 @@ namespace ConsumerManager.Controllers
       var now = DateTime.UtcNow;
       var customer = new Customer
       {
+        Id = 0,
         Title = request.Title,
         Forename = request.Forename,
         Surname = request.Surname,
         Email = request.Email.ToLower(),
         Phone = request.Phone,
         IsActive = true,
+        MainAddressId = 0,
         CreatedAt = now,
         LastUpdatedAt = now,
       };

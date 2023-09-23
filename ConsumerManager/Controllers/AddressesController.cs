@@ -31,8 +31,8 @@ namespace ConsumerManager.Controllers
       return Ok(customer);
     }
 
-    [HttpPost] // POST /addresses
-    public async Task<ActionResult<Address>> Create([FromBody] CreateAddressRequest request)
+    [HttpPost("{customerId}")] // POST /addresses
+    public async Task<ActionResult<Address>> Create(int customerId, [FromBody] CreateAddressRequest request)
     {
       logger.LogInformation("Trying to create a new customer");
       if (request is null)
@@ -40,7 +40,7 @@ namespace ConsumerManager.Controllers
         return BadRequest("You need to provide data for new address.");
       }
 
-      var customer = await service.GetCustomerById(request.CustomerId ?? 0);
+      var customer = await service.GetCustomerById(customerId);
       if (customer is null) 
       {
         return NotFound("Customer doesn't exists!");
@@ -49,13 +49,13 @@ namespace ConsumerManager.Controllers
       var now = DateTime.UtcNow;
       var address = new Address
       {
-        CustomerId = customer.Id,
+        CustomerId = customerId,
         Line1 = request.Line1,
-        Line2 = request.Line2,
+        Line2 = request.Line2 ?? "",
         Town = request.Town,
-        County = request.County,
+        County = request.County ?? "",
         Postcode = request.Postcode,
-        Country = request.Country,
+        Country = request.Country ?? "GB",
         CreatedAt = now,
         LastUpdatedAt = now,
       };
@@ -87,8 +87,8 @@ namespace ConsumerManager.Controllers
       if (customer.MainAddressId == id)
       {
         var addressId = customer.Addresses?.FirstOrDefault(address => address.Id != id)?.Id;
-        customer.MainAddressId = addressId ?? 0;
-        await service.UpdateCustomer(customer);
+        Customer updated = customer with { MainAddressId = addressId ?? 0 };
+        await service.UpdateCustomer(updated);
       }
 
       logger.LogInformation("Address successfully deleted.");

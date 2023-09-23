@@ -40,6 +40,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
         Email = "john.smith@example.com",
         Phone = "+4407111222333",
         IsActive = true,
+        MainAddressId = 4,
         Addresses = new List<Address>() {
           new()
           {
@@ -232,8 +233,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
     public async Task Activate_ExistentCustomer_ReturnsActivatedCustomer()
     {
       // Arrange
-      var customer = CreateTestCustomer();
-      customer.IsActive = false;
+      var customer = CreateTestCustomer() with { IsActive = false };
       serviceMock.Setup(mock => mock.UpdateCustomerStatus(It.IsAny<int>(), true)).ReturnsAsync(customer);
       var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
 
@@ -263,8 +263,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
     public async Task Dectivate_ExistentCustomer_ReturnsActivatedCustomer()
     {
       // Arrange
-      var customer = CreateTestCustomer();
-      customer.IsActive = true;
+      var customer = CreateTestCustomer() with { IsActive = true };
       serviceMock.Setup(mock => mock.UpdateCustomerStatus(It.IsAny<int>(), false)).ReturnsAsync(customer);
       var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
 

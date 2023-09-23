@@ -8,42 +8,23 @@ namespace ConsumerManager.Entities
 {
   public record Address
   {
-    public int? Id { get; set; }
-
-    [MaxLength(80)]
-    public string? Line1 { get; set; }
-
-    [AllowNull]
-    [MaxLength(80)]
-    public string? Line2 { get; set; }
-
-    [MaxLength(50)]
-    public string? Town { get; set; }
-
-    [AllowNull]
-    [MaxLength(50)]
-    [DefaultValue("")]
-    public string? County { get; set; }
-
-    [MaxLength(10)]
-    [ValidPostcode]
-    public string? Postcode { get; set; }
-
-    [MaxLength(2)]
-    [DefaultValue("GB")]
-    public string? Country { get; set; }
-
-    public int? CustomerId { get; set; }
-
-    public virtual DateTime CreatedAt { get; set; }
-    public virtual DateTime LastUpdatedAt { get; set; }
+    public int Id { get; init; }
+    public required string Line1 { get; init; }
+    public required string Line2 { get; init; }
+    public required string Town { get; init; }
+    public required string County { get; init; }
+    public required string Postcode { get; init; }
+    public required string Country { get; init; }
+    public int CustomerId { get; init; }
+    public virtual DateTime CreatedAt { get; init; }
+    public virtual DateTime LastUpdatedAt { get; init; }
   }
 
   public record CreateAddressRequest
   {
     [MaxLength(80)]
     [Required]
-    public string? Line1 { get; init; }
+    public required string Line1 { get; init; }
 
     [AllowNull]
     [MaxLength(80)]
@@ -51,23 +32,19 @@ namespace ConsumerManager.Entities
 
     [MaxLength(50)]
     [Required]
-    public string? Town { get; init; }
+    public required string Town { get; init; }
 
     [AllowNull]
     [MaxLength(50)]
-    [DefaultValue("")]
     public string? County { get; init; }
 
     [MaxLength(10)]
     [ValidPostcode]
     [Required]
-    public string? Postcode { get; init; }
+    public required string Postcode { get; init; }
 
     [MaxLength(2)]
     [DefaultValue("GB")]
     public string? Country { get; init; }
-
-    [Required]
-    public int? CustomerId { get; init; }
   }
 }
