@@ -38,14 +38,12 @@ if (app.Environment.IsDevelopment())
 // Migrate latest database changes during startup
 using (var scope = app.Services.CreateScope())
 {
-  var model = scope.ServiceProvider
-      .GetRequiredService<RelationalModel>();
-
-  // Here is the migration executed
+  var model = scope.ServiceProvider.GetRequiredService<RelationalModel>();
   model.Database.Migrate();
 }
 
-app.UseHttpsRedirection();
+// Don't use HTTPS as this will be handover to the Application Load Balancer
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
