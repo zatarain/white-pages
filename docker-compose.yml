@@ -14,10 +14,15 @@ services:
       database:
         condition: service_healthy
     environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://0.0.0.0:443;http://0.0.0.0:80"
       Postgres__Database: consumer-manager
       Postgres__Hostname: ${POSTGRES_HOST}
       Postgres__Username: ${POSTGRES_USERNAME}
       Postgres__Password: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   database:
     container_name: database
