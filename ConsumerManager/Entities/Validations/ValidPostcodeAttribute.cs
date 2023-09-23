@@ -12,11 +12,11 @@ namespace ConsumerManager.Entities.Validations
     };
     protected override ValidationResult? IsValid(object? value, ValidationContext context)
     {
-      var address = context.ObjectInstance as CreateAddressRequest;
-      var country = address?.Country ?? "GB";
-      if (patterns.ContainsKey(country))
+      var request = context.ObjectInstance as CreateAddressRequest;
+      var country = request?.Country ?? "GB";
+      if (request is not null && patterns.ContainsKey(country))
       {
-        var postcode = address?.Postcode ?? string.Empty;
+        var postcode = request.Postcode;
         if (!Regex.Match(postcode, patterns[country], RegexOptions.IgnoreCase).Success)
         {
           return new ValidationResult($"Invalid postcode for country '{country}'");

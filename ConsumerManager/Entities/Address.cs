@@ -45,6 +45,7 @@ namespace ConsumerManager.Entities
 
     [MaxLength(2)]
     [DefaultValue("GB")]
+    [ValidCountryCode]
     public string? Country { get; init; }
   }
 }
