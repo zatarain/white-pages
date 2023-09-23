@@ -12,7 +12,7 @@ namespace ConsumerManager.Entities.Validations
     };
     protected override ValidationResult? IsValid(object? value, ValidationContext context)
     {
-      var address = context.ObjectInstance as Address;
+      var address = context.ObjectInstance as CreateAddressRequest;
       var country = address?.Country ?? "GB";
       if (patterns.ContainsKey(country))
       {
