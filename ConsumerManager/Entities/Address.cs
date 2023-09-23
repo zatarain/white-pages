@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ConsumerManager.Entities.Validations;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace ConsumerManager.Entities
 {
@@ -19,12 +22,15 @@ namespace ConsumerManager.Entities
 
     [AllowNull]
     [MaxLength(50)]
+    [DefaultValue("")]
     public string? County { get; set; }
 
     [MaxLength(10)]
+    [ValidPostcode]
     public string? Postcode { get; set; }
 
     [MaxLength(2)]
+    [DefaultValue("GB")]
     public string? Country { get; set; }
 
     public int? CustomerId { get; set; }
@@ -49,13 +55,16 @@ namespace ConsumerManager.Entities
 
     [AllowNull]
     [MaxLength(50)]
+    [DefaultValue("")]
     public string? County { get; init; }
 
     [MaxLength(10)]
+    [ValidPostcode]
     [Required]
     public string? Postcode { get; init; }
 
     [MaxLength(2)]
+    [DefaultValue("GB")]
     public string? Country { get; init; }
 
     [Required]
