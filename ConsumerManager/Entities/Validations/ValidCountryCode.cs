@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 
 namespace ConsumerManager.Entities.Validations
 {
@@ -13,9 +12,8 @@ namespace ConsumerManager.Entities.Validations
 
     protected override ValidationResult? IsValid(object? value, ValidationContext context)
     {
-      var request = context.ObjectInstance as CreateAddressRequest;
-      var country = request?.Country ?? "GB";
-      if (request is not null && !countries.Contains(country))
+      var country = value ?? "GB";
+      if (!countries.Contains(country))
       {
         return new ValidationResult($"Invalid for country code '{country}'");
       }
