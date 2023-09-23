@@ -11,6 +11,7 @@ builder.Configuration.AddEnvironmentVariables();
 // Add database connection and context.
 var postgres = builder.Configuration.GetSection("Postgres").Get<PostgresConnection>();
 builder.Services.AddDbContext<RelationalModel>(options => options.UseNpgsql(postgres?.ToString()));
+// Migrate latest database changes during startup
 builder.Services.AddScoped<IDataServiceProvider, AsyncDataService>();
 
 // Add services to the container.
@@ -32,6 +33,16 @@ if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
   app.UseSwaggerUI();
+}
+
+// Migrate latest database changes during startup
+using (var scope = app.Services.CreateScope())
+{
+  var model = scope.ServiceProvider
+      .GetRequiredService<RelationalModel>();
+
+  // Here is the migration executed
+  model.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
