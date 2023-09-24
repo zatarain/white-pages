@@ -190,5 +190,33 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual.Should().BeOfType<BadRequestObjectResult>();
     }
+
+    [Fact]
+    public async Task Delete_SecondaryAddressOfCustomer_ReturnsSuccessNoContent()
+    {
+      // Arrange
+      var main = CreateTestAddress();
+      var secondary = CreateTestAddress() with { 
+        Id = 5,
+        Line1 = "Flat 46",
+      };
+      var customer = CreateTestCustomer() with
+      {
+        Addresses = new List<Address>() {
+          main,
+          secondary,
+        }
+      };
+      serviceMock.Setup(mock => mock.GetCustomerByAddressId(It.IsAny<int>())).ReturnsAsync(customer);
+      serviceMock.Setup(mock => mock.DeleteAddress(It.IsAny<Address>())).Returns(Task.CompletedTask);
+
+      var controller = new AddressesController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Delete(secondary.Id);
+
+      // Assert
+      actual.Should().BeOfType<NoContentResult>();
+    }
   }
 }
