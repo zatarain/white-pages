@@ -155,5 +155,40 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual.Result.Should().BeOfType<NotFoundObjectResult>();
     }
+
+    [Fact]
+    public async Task Delete_UnexistentAddress_ReturnsNotFound()
+    {
+      // Arrange
+      serviceMock.Setup(mock => mock.GetCustomerByAddressId(It.IsAny<int>())).ReturnsAsync(null as Customer);
+
+      var controller = new AddressesController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Delete(7);
+
+      // Assert
+      actual.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task Delete_ForCustomerWithSingleAddress_ReturnsBadRequest()
+    {
+      // Arrange
+      var address = CreateTestAddress();
+      var customer = CreateTestCustomer() with
+      {
+        Addresses = new List<Address>() { address }
+      };
+      serviceMock.Setup(mock => mock.GetCustomerByAddressId(It.IsAny<int>())).ReturnsAsync(customer);
+
+      var controller = new AddressesController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Delete(address.Id);
+
+      // Assert
+      actual.Should().BeOfType<BadRequestObjectResult>();
+    }
   }
 }
