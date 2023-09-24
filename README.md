@@ -141,7 +141,8 @@ The input for all the API end-points will be always in JSON format and in most o
 
 | Method   | Address                     | Description                            | Success Status | Possible Failure Status            |
 | :---:    | :---                        | :----                                  | :---:          | :---                               |
-| `HEAD`   | `/health`                   | Service health check                   | `200 OK`       | `*Any*`                            |
+| `GET`    | `/health/ready`             | Dependencies health check: `PostgreSQL`| `200 OK`       | `503 Service Unavailable`          |
+| `GET`    | `/health/live`              | API service health check               | `200 OK`       | `503 Service Unavailable`          |
 | `GET`    | `/customers`                | List of all customers                  | `200 OK`       | `*Any*`                            |
 | `GET`    | `/customers/only-active`    | List of active customers               | `200 OK`       | `*Any*`                            |
 | `GET`    | `/customers/:id`            | Get customer details and its addresses | `200 OK`       | `404 Not Found`                    |
@@ -164,6 +165,7 @@ There is a [continuous integration workflow][ci-cd-pipeline] that runs in [GitHu
 We are using following libraries for the implementation:
 
 * **`Microsoft.AspNetCore.OpenApi`.** A web framework to implement a RESTful API via HTTP.
+* **`AspNetCore.HealthChecks.NpgSql`.** A library to add health checks for the API and its dependencies easily.
 * **`Microsoft.EntityFrameworkCore`.** A library for Object Relational Model (ORM) in order to represent the records in the database as relational objects.
 * **`Npgsql.EntityFrameworkCore.PostgreSQL`.** Adaptation to manage PostgreSQL dialect and connect to the database with .NET Entity Framework.
 

@@ -1,4 +1,5 @@
 using ConsumerManager.Entities.Database;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -26,6 +27,13 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks().AddNpgSql(
+  postgres?.ToString() ?? "",
+  name: "posgresql",
+  timeout: TimeSpan.FromSeconds(5),
+  tags: new[] { "ready" }
+);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,6 +57,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+  Predicate = (check) => check.Tags.Contains("ready")
+});
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions{ Predicate = _ => false });
 app.Run();
 
 public partial class Program { }
