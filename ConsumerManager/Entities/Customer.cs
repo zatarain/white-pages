@@ -6,59 +6,41 @@ namespace ConsumerManager.Entities
 {
   public record Customer
   {
-    public int? Id { get; set; }
-
-    [MaxLength(20)]
-    public string? Title { get; set; }
-    
-    [MaxLength(50)]
-    public string? Forename { get; set; }
-    
-    [MaxLength(50)]
-    public string? Surname { get; set; }
-    
-    [MaxLength(75)]
-    [EmailAddress]
-    public string? Email { get; set; }
-    
-    [MaxLength(15)]
-    [Phone]
-    public string? Phone { get; set; }
-
-    [DefaultValue(true)]
-    public bool IsActive { get; set; }
-
-    public virtual ICollection<Address>? Addresses { get; set; }
-
-    public virtual DateTime CreatedAt { get; set; }
-    public virtual DateTime LastUpdatedAt { get; set; }
+    public required int Id { get; init; }
+    public required string Title { get; init; }
+    public required string Forename { get; init; }
+    public required string Surname { get; init; }
+    public required string Email { get; init; }
+    public required string Phone { get; init; }
+    public required bool IsActive { get; init; }
+    public required int MainAddressId { get; init; }
+    public virtual ICollection<Address>? Addresses { get; init; }
+    public virtual DateTime CreatedAt { get; init; }
+    public virtual DateTime LastUpdatedAt { get; init; }
   }
 
   public record CreateCustomerRequest
   {
     [MaxLength(20)]
     [Required]
-    public string? Title { get; init; }
+    public required string Title { get; init; }
 
     [MaxLength(50)]
     [Required]
-    public string? Forename { get; init; }
+    public required string Forename { get; init; }
 
     [MaxLength(50)]
     [Required]
-    public string? Surname { get; init; }
+    public required string Surname { get; init; }
 
     [MaxLength(75)]
     [EmailAddress]
     [Required]
-    public string? Email { get; init; }
+    public required string Email { get; init; }
 
     [MaxLength(15)]
     [Phone]
     [Required]
-    public string? Phone { get; init; }
-
-    //public required virtual ICollection<Address> Addresses { get; set; }
+    public required string Phone { get; init; }
   }
 }
- 

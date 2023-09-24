@@ -53,26 +53,25 @@ namespace ConsumerManager.Controllers
     public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerRequest request)
     {
       logger.LogInformation("Trying to create a new customer");
-      if (request is null)
-      {
-        return BadRequest("You need to provide data for new customer.");
-      }
-
+      
       if (await service.CustomerExists(request.Email, request.Phone))
       {
         return BadRequest($"A customer with the email '{request.Email}' and/or phone '{request.Phone}' already exists.");
       }
 
+      var now = DateTime.UtcNow;
       var customer = new Customer
       {
+        Id = 0,
         Title = request.Title,
         Forename = request.Forename,
         Surname = request.Surname,
         Email = request.Email.ToLower(),
         Phone = request.Phone,
         IsActive = true,
-        CreatedAt = DateTime.UtcNow,
-        LastUpdatedAt = DateTime.UtcNow,
+        MainAddressId = 0,
+        CreatedAt = now,
+        LastUpdatedAt = now,
       };
 
       await service.CreateCustomer( customer );

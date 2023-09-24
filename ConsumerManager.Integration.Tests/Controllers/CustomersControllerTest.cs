@@ -10,18 +10,56 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ConsumerManager.Integration.Tests.Controllers
 {
-  public class CustomersControllerTest : IClassFixture<WebApplicationFactory<Program>>
+  public class CustomersControllerTest : IClassFixture<TestApplicationFactory<Program>>
   {
-    private readonly WebApplicationFactory<Program> factory;
+    private readonly TestApplicationFactory<Program> factory;
 
-    public CustomersControllerTest(WebApplicationFactory<Program> factory)
+    public CustomersControllerTest(TestApplicationFactory<Program> factory)
     {
       this.factory = factory;
+    }
+
+    [Theory]
+    [InlineData("Mr.", "John", "Smith", "john.smith@example.com", "+4407111222333")]
+    [InlineData("Mr.", "Another", "Customer", "another.customer@example.com", "07444555666")]
+
+    public async Task Create_WithValidData_ReturnsCreatedCustomer(string title, string forename, string surname, string email, string phone)
+    {
+      // Arrange
+      var client = factory.CreateClient();
+
+      CreateCustomerRequest request = new()
+      {
+        Title = title,
+        Forename = forename,
+        Surname = surname,
+        Email = email,
+        Phone = phone,
+      };
+
+      var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
+      {
+        Headers = {
+          ContentType = new MediaTypeHeaderValue("application/json"),
+        }
+      };
+
+      // Act
+      var response = await client.PostAsync("/customers", body);
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.Created);
+      var customer = await response.Content.ReadFromJsonAsync<Customer>();
+      request.Should().BeEquivalentTo(
+        customer,
+        options => options.ComparingByMembers<Customer>().ExcludingMissingMembers()
+      );
     }
 
     [Theory]
@@ -51,20 +89,53 @@ namespace ConsumerManager.Integration.Tests.Controllers
         Phone = phone,
       };
 
-      // Act
-      // var actual = await controller.Create(request);
-      var response = await client.PostAsync(
-        "/customers",
-        new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
-        {
-          Headers = {
-            ContentType = new MediaTypeHeaderValue("application/json"),
-          }
+      var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
+      {
+        Headers = {
+          ContentType = new MediaTypeHeaderValue("application/json"),
         }
-      );
+      };
+
+      // Act
+      var response = await client.PostAsync("/customers", body);
 
       // Assert
       response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Create_WithNullBody_ReturnsBadRequest()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+
+      var body = new StringContent(JsonConvert.SerializeObject(null), Encoding.UTF8)
+      {
+        Headers = {
+          ContentType = new MediaTypeHeaderValue("application/json"),
+        }
+      };
+
+      // Act
+      var response = await client.PostAsync("/customers", body);
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ReadAll_Always_ReturnsListOfCustomers()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+
+      // Act
+      var response = await client.GetAsync("/customers");
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.OK);
+      var customers = await response.Content.ReadFromJsonAsync<List<Customer>>();
+      customers.Should().NotBeNull();
     }
   }
 }

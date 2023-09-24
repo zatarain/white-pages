@@ -55,20 +55,46 @@ namespace ConsumerManager.Entities.Database
       await model.SaveChangesAsync();
     }
 
-    public virtual Task UpdateCustomer(Customer customer)
-    {
-      throw new NotImplementedException();
+    public virtual async Task UpdateCustomer(Customer customer)
+    {      
+      model.Customers.Update(customer);
+      await model.SaveChangesAsync();
     }
 
     public virtual async Task<Customer?> UpdateCustomerStatus(int id, bool isActive)
     {
       var customer = await GetCustomerById(id);
-      if (customer is not null)
+      if (customer is null)
       {
-        customer.IsActive = isActive;
-        await model.SaveChangesAsync();
+        return customer;
       }
+
+      Customer updated = customer with {
+        IsActive = isActive,
+        LastUpdatedAt = DateTime.UtcNow,
+      };
+      await model.SaveChangesAsync();
+      return updated;
+    }
+
+    public virtual async Task<Customer?> GetCustomerByAddressId(int id)
+    {
+      var address = await model.Addresses
+        .FirstOrDefaultAsync(address => address.Id == id);
+      var customer = await GetCustomerById(address?.CustomerId ?? 0);
       return customer;
+    }
+
+    public virtual async Task CreateAddress(Address address)
+    {
+      await model.Addresses.AddAsync(address);
+      await model.SaveChangesAsync();
+    }
+
+    public virtual async Task DeleteAddress(Address address)
+    {
+      model.Addresses.Remove(address);
+      await model.SaveChangesAsync();
     }
   }
 }

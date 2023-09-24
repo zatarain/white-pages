@@ -22,9 +22,6 @@ COPY ["ConsumerManager/ConsumerManager.csproj", "ConsumerManager/"]
 RUN dotnet restore "ConsumerManager/ConsumerManager.csproj"
 COPY . .
 WORKDIR "/src/ConsumerManager"
-# RUN dotnet dev-certs https && \
-#     dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM && \
-#     update-ca-certificates
 RUN dotnet build "ConsumerManager.csproj" -c Release -o /app/build
 
 FROM build AS publish
@@ -33,4 +30,7 @@ RUN dotnet publish "ConsumerManager.csproj" -c Release -o /app/publish /p:UseApp
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ConsumerManager.dll"]
+COPY ./entrypoint.sh .
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["dotnet", "ConsumerManager.dll"]
