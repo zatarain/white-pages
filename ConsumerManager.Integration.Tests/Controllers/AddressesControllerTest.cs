@@ -1,4 +1,5 @@
-﻿using ConsumerManager.Controllers;
+﻿using Castle.Core.Resource;
+using ConsumerManager.Controllers;
 using ConsumerManager.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -19,10 +20,36 @@ namespace ConsumerManager.Integration.Tests.Controllers
   public class AddressesControllerTest : IClassFixture<TestApplicationFactory<Program>>
   {
     private readonly TestApplicationFactory<Program> factory;
+    private readonly Random random = new();
 
     public AddressesControllerTest(TestApplicationFactory<Program> factory)
     {
       this.factory = factory;
+    }
+
+    private async Task<Customer?> CreateRandomCustomer(HttpClient client)
+    {
+      string code = random.Next(1, 99).ToString();
+      string number = random.Next(10000000, 99999999).ToString();
+      CreateCustomerRequest request = new()
+      {
+        Title = "Mr.",
+        Forename = "Random",
+        Surname = "Customer",
+        Email = $"random-{number}@customer.com",
+        Phone = $"+{code}111{number}",
+      };
+
+      var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
+      {
+        Headers = {
+          ContentType = new MediaTypeHeaderValue("application/json"),
+        }
+      };
+
+      var createResponse = await client.PostAsync("/customers", body);
+      var created = await createResponse.Content.ReadFromJsonAsync<Customer>();
+      return created;
     }
 
     [Fact]
@@ -30,25 +57,7 @@ namespace ConsumerManager.Integration.Tests.Controllers
     {
       // Arrange
       var client = factory.CreateClient();
-
-      CreateCustomerRequest customerRequest = new()
-      {
-        Title = "Mr.",
-        Forename = "New",
-        Surname = "Customer",
-        Email = "mr.new@customer.com",
-        Phone = "+4407333222444",
-      };
-
-      var customerJSON = new StringContent(JsonConvert.SerializeObject(customerRequest), Encoding.UTF8)
-      {
-        Headers = {
-          ContentType = new MediaTypeHeaderValue("application/json"),
-        }
-      };
-
-      var customerResponse = await client.PostAsync("/customers", customerJSON);
-      var customer = await customerResponse.Content.ReadFromJsonAsync<Customer>();
+      var customer = await CreateRandomCustomer(client) ;
 
       CreateAddressRequest addressRequest = new()
       {
@@ -79,38 +88,46 @@ namespace ConsumerManager.Integration.Tests.Controllers
       );
     }
 
-    [Theory]
-    [InlineData("11", null, "Liverpool", "L4 7AB", "GB")]
-    [InlineData("12", "Flat 12", null, "L4 7AB", "GB")]
-    [InlineData("13", "Flat 13", "Liverpool", null, "GB")]
-    [InlineData("14", "Flat 14", "Liverpool", "L4 7AB", "XB")]
-    [InlineData("15", "Flat 15", "Liverpool", "L4 777", "GB")]
-    [InlineData("21", "Flat 21", "Dallas", "90AC7", "US")]
-    [InlineData("22", "Flat 22", "Mexico City", "L4 7AB", "MX")]
-    public async Task Create_WithInvalidData_ReturnsBadRequest(
-      string padding, string line1, string town, string postcode, string country)
+    private async Task<Address?> CreateRandomAddress(HttpClient client, int customerId)
     {
-      // Arrange
-      var client = factory.CreateClient();
-
-      CreateCustomerRequest customerRequest = new()
+      var flat = random.Next(10, 99).ToString();
+      var streetNumber = random.Next(100, 500).ToString();
+      CreateAddressRequest addressRequest = new()
       {
-        Title = "Mr.",
-        Forename = "New",
-        Surname = "Customer",
-        Email = $"mr.new-{padding}@customer.com",
-        Phone = $"+44073332225{padding}",
+        Line1 = $"Flat {flat}",
+        Line2 = $"{streetNumber} Manchester Road",
+        Town = "London",
+        County = "",
+        Postcode = "E14 9LR",
+        Country = "GB",
       };
 
-      var customerJSON = new StringContent(JsonConvert.SerializeObject(customerRequest), Encoding.UTF8)
+      var addressJSON = new StringContent(JsonConvert.SerializeObject(addressRequest), Encoding.UTF8)
       {
         Headers = {
           ContentType = new MediaTypeHeaderValue("application/json"),
         }
       };
 
-      var customerResponse = await client.PostAsync("/customers", customerJSON);
-      var customer = await customerResponse.Content.ReadFromJsonAsync<Customer>();
+      var response = await client.PostAsync($"/addresses/{customerId}", addressJSON);
+
+      var address = await response.Content.ReadFromJsonAsync<Address>();
+      return address;
+    }
+
+    [Theory]
+    [InlineData(null, "Liverpool", "L4 7AB", "GB")]
+    [InlineData("Flat 12", null, "L4 7AB", "GB")]
+    [InlineData("Flat 13", "Liverpool", null, "GB")]
+    [InlineData("Flat 14", "Liverpool", "L4 7AB", "XB")]
+    [InlineData("Flat 15", "Liverpool", "L4 777", "GB")]
+    [InlineData("Flat 21", "Dallas", "90AC7", "US")]
+    [InlineData("Flat 22", "Mexico City", "L4 7AB", "MX")]
+    public async Task Create_WithInvalidData_ReturnsBadRequest(string line1, string town, string postcode, string country)
+    {
+      // Arrange
+      var client = factory.CreateClient();
+      var customer = await CreateRandomCustomer(client);
 
       CreateAddressRequest addressRequest = new()
       {
@@ -134,6 +151,22 @@ namespace ConsumerManager.Integration.Tests.Controllers
 
       // Assert
       response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Delete_FromCustomerWithMultipleAddress_ReturnsNoContent()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+      var customer = await CreateRandomCustomer(client);
+      var address1 = await CreateRandomAddress(client, customer.Id);
+      var address2 = await CreateRandomAddress(client, customer.Id);
+
+      // Act
+      var response = await client.DeleteAsync($"/addresses/{address1?.Id}");
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
   }
 }
