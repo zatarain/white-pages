@@ -20,6 +20,8 @@ namespace ConsumerManager.Integration.Tests.Controllers
   {
     private readonly TestApplicationFactory<Program> factory;
 
+    private readonly Random random = new();
+
     public CustomersControllerTest(TestApplicationFactory<Program> factory)
     {
       this.factory = factory;
@@ -138,20 +140,17 @@ namespace ConsumerManager.Integration.Tests.Controllers
       customers.Should().NotBeNull();
     }
 
-
-    [Fact]
-    public async Task Delete_ExistentCustomer_ReturnsNoContent()
+    private async Task<Customer?> CreateRandomCustomer(HttpClient client)
     {
-      // Arrange
-      var client = factory.CreateClient();
-
+      string code = random.Next(1, 99).ToString();
+      string number = random.Next(10000000, 99999999).ToString();
       CreateCustomerRequest request = new()
       {
         Title = "Mr.",
-        Forename = "Deletable",
+        Forename = "Random",
         Surname = "Customer",
-        Email = "to-delete@example.com",
-        Phone = "+5216691220511",
+        Email = $"random-{number}@customer.com",
+        Phone = $"+{code}111{number}",
       };
 
       var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
@@ -161,8 +160,17 @@ namespace ConsumerManager.Integration.Tests.Controllers
         }
       };
 
-      var createResponse = await client.PostAsync("/customers", body);      
-      var customer = await createResponse.Content.ReadFromJsonAsync<Customer>();
+      var createResponse = await client.PostAsync("/customers", body);
+      var created = await createResponse.Content.ReadFromJsonAsync<Customer>();
+      return created;
+    }
+
+    [Fact]
+    public async Task Delete_ExistentCustomer_ReturnsNoContent()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+      var customer = await CreateRandomCustomer(client);
 
       // Act
       var response = await client.DeleteAsync($"/customers/{customer?.Id}");
