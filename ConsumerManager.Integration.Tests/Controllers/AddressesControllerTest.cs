@@ -1,4 +1,5 @@
-﻿using ConsumerManager.Controllers;
+﻿using Castle.Core.Resource;
+using ConsumerManager.Controllers;
 using ConsumerManager.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -26,30 +27,37 @@ namespace ConsumerManager.Integration.Tests.Controllers
       this.factory = factory;
     }
 
-    [Fact]
-    public async Task Create_WithValidData_ReturnsCreatedAddress()
+    private async Task<Customer?> CreateRandomCustomer(HttpClient client)
     {
-      // Arrange
-      var client = factory.CreateClient();
-
-      CreateCustomerRequest customerRequest = new()
+      string code = random.Next(1, 99).ToString();
+      string number = random.Next(10000000, 99999999).ToString();
+      CreateCustomerRequest request = new()
       {
         Title = "Mr.",
-        Forename = "New",
+        Forename = "Random",
         Surname = "Customer",
-        Email = "mr.new@customer.com",
-        Phone = "+4407333222444",
+        Email = $"random-{number}@customer.com",
+        Phone = $"+{code}111{number}",
       };
 
-      var customerJSON = new StringContent(JsonConvert.SerializeObject(customerRequest), Encoding.UTF8)
+      var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
       {
         Headers = {
           ContentType = new MediaTypeHeaderValue("application/json"),
         }
       };
 
-      var customerResponse = await client.PostAsync("/customers", customerJSON);
-      var customer = await customerResponse.Content.ReadFromJsonAsync<Customer>();
+      var createResponse = await client.PostAsync("/customers", body);
+      var created = await createResponse.Content.ReadFromJsonAsync<Customer>();
+      return created;
+    }
+
+    [Fact]
+    public async Task Create_WithValidData_ReturnsCreatedAddress()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+      var customer = await CreateRandomCustomer(client) ;
 
       CreateAddressRequest addressRequest = new()
       {
@@ -80,29 +88,31 @@ namespace ConsumerManager.Integration.Tests.Controllers
       );
     }
 
-    private async Task<Customer?> CreateRandomCustomer(HttpClient client)
+    private async Task<Address?> CreateRandomAddress(HttpClient client, int customerId)
     {
-      string code = random.Next(1, 99).ToString();
-      string number = random.Next(10000000, 99999999).ToString();
-      CreateCustomerRequest request = new()
+      var flat = random.Next(10, 99).ToString();
+      var streetNumber = random.Next(100, 500).ToString();
+      CreateAddressRequest addressRequest = new()
       {
-        Title = "Mr.",
-        Forename = "Random",
-        Surname = "Customer",
-        Email = $"random-{number}@customer.com",
-        Phone = $"+{code}111{number}",
+        Line1 = $"Flat {flat}",
+        Line2 = $"{streetNumber} Manchester Road",
+        Town = "London",
+        County = "",
+        Postcode = "E14 9LR",
+        Country = "GB",
       };
 
-      var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
+      var addressJSON = new StringContent(JsonConvert.SerializeObject(addressRequest), Encoding.UTF8)
       {
         Headers = {
           ContentType = new MediaTypeHeaderValue("application/json"),
         }
       };
 
-      var createResponse = await client.PostAsync("/customers", body);
-      var created = await createResponse.Content.ReadFromJsonAsync<Customer>();
-      return created;
+      var response = await client.PostAsync($"/addresses/{customerId}", addressJSON);
+
+      var address = await response.Content.ReadFromJsonAsync<Address>();
+      return address;
     }
 
     [Theory]
@@ -141,6 +151,22 @@ namespace ConsumerManager.Integration.Tests.Controllers
 
       // Assert
       response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Delete_FromCustomerWithMultipleAddress_ReturnsNoContent()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+      var customer = await CreateRandomCustomer(client);
+      var address1 = await CreateRandomAddress(client, customer.Id);
+      var address2 = await CreateRandomAddress(client, customer.Id);
+
+      // Act
+      var response = await client.DeleteAsync($"/addresses/{address1?.Id}");
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
   }
 }
