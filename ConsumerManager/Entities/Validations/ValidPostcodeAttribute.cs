@@ -16,7 +16,7 @@ namespace ConsumerManager.Entities.Validations
       var country = request?.Country ?? "GB";
       if (request is not null && patterns.ContainsKey(country))
       {
-        var postcode = request.Postcode;
+        var postcode = value?.ToString() ?? string.Empty;
         if (!Regex.Match(postcode, patterns[country], RegexOptions.IgnoreCase).Success)
         {
           return new ValidationResult($"Invalid postcode for country '{country}'");
