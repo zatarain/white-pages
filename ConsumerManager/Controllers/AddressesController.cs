@@ -34,7 +34,7 @@ namespace ConsumerManager.Controllers
     [HttpPost("{customerId}")] // POST /addresses
     public async Task<ActionResult<Address>> Create(int customerId, [FromBody] CreateAddressRequest request)
     {
-      logger.LogInformation("Trying to create a new customer");
+      logger.LogInformation("Trying to create a new address");
       var customer = await service.GetCustomerById(customerId);
       if (customer is null)
       {
