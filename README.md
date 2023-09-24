@@ -213,7 +213,7 @@ You can play with it in several ways:
 
 ![image](https://github.com/zatarain/white-pages/assets/539783/2071c3e2-7f8e-4d7e-b5ae-8d9b38b291e2)
 
-2. The [`requests/`][json-requests] also contains a `white-pages.postman.json` file to import in Postman with a collection of request:
+2. The [`requests/`][json-requests] also contains a `white-pages.postman.json` file to import in [Postman][postman-website] with a collection of request:
 
 ![image](https://github.com/zatarain/white-pages/assets/539783/5f1c1077-3d36-424d-aaea-0217f2df65b1)
 
@@ -227,16 +227,16 @@ You will get an output like following:
 
 ```json
 {
-	"id": 1,
-	"title": "Mr.",
-	"forename": "New",
-	"surname": "Customer",
-	"email": "mr-newc@customer.com",
-	"phone": "+4407223456789",
-	"isActive": true,
-	"mainAddressId": 0,
-	"createdAt": "2023-09-24T14:37:26.3136692Z",
-	"lastUpdatedAt": "2023-09-24T14:37:26.3136692Z"
+  "id": 1,
+  "title": "Mr.",
+  "forename": "New",
+  "surname": "Customer",
+  "email": "mr-newc@customer.com",
+  "phone": "+4407223456789",
+  "isActive": true,
+  "mainAddressId": 0,
+  "createdAt": "2023-09-24T14:37:26.3136692Z",
+  "lastUpdatedAt": "2023-09-24T14:37:26.3136692Z"
 }
 ```
 
@@ -256,7 +256,7 @@ You can follow the test coverage reports of this project in the [CodeCov website
 
 ![Icicle][codecov-icicle]
 
-**IMPORTANT NOTE:** Even that we can see there is a good coverage [![codecov](https://codecov.io/gh/zatarain/white-pages/graph/badge.svg?token=55VMMF1IUP)](https://codecov.io/gh/zatarain/white-pages), that doesn't mean the API is flawless, as it was mentioned in the [Assumptions section](#-assumptions) there are many chances to improve and further work, and for sure it may have even more.
+**IMPORTANT NOTE:** Even that we can see there is a decent coverage [![codecov](https://codecov.io/gh/zatarain/white-pages/graph/badge.svg?token=55VMMF1IUP)](https://codecov.io/gh/zatarain/white-pages), that doesn't mean the API is flawless, as it was mentioned in the [Assumptions section](#-assumptions) there are many chances to improve and further work, and for sure it may have even more.
 
 
 ## 📚 References
@@ -296,4 +296,3 @@ You can follow the test coverage reports of this project in the [CodeCov website
 [acid-transactions]: https://en.wikipedia.org/wiki/ACID
 [data-driven-testing]: https://en.wikipedia.org/wiki/Data-driven_testing
 [json-requests]: https://github.com/zatarain/white-pages/tree/main/requests
-[sqlite-viewer]: https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer
