@@ -183,7 +183,7 @@ A Docker container it's not persistent itself, so the Docker Compose file specif
 
 In order to build and run the application locally you will need to have Docker installed and internet connection to download the dependency packages and set some environment variables. Optionally, you can open and run the solution file `white-pages.sln` with Microsoft Visual Studio Community Edition.
 
-In your terminal, clone repository, build image and run containers swarm as follow:
+In your terminal, clone [this repository][white-pages-repo], build image and run containers swarm as follow:
 
 ```sh
 export POSTGRES_HOST=database
@@ -201,7 +201,7 @@ That will follow the configuration specified in the [`docker-compose.yml`][compo
 
 ## ✅ Testing
 
-This project is able to be tested in manual way and with automated unit testing. This section will explain how can you play around with the API once you run it following the steps of the [previous section](#-running).
+This project is able to be tested in manual way and with automated unit testing. This section will explain how can you play around with the API once you run it following the steps of the [previous section](#%EF%B8%8F-running).
 
 ### 🧪 Manual
 
@@ -244,6 +244,8 @@ You will get an output like following:
 
 Automated unit testing has been implemented and they run on each push and pull requests within the GitHub Actions Pipeline [![Continuous Integration Pipeline](https://github.com/zatarain/white-pages/actions/workflows/api.yml/badge.svg)](https://github.com/zatarain/white-pages/actions/workflows/api.yml). Following is how they are shown in [GitHub website][whitepages-actions]:
 
+![image](https://github.com/zatarain/white-pages/assets/539783/9a3f5f0d-d1ab-4749-b406-755f9d4cd801)
+
 Some of those integration testing use [DDT (Data Driven Testing) approach][data-driven-testing] in order to test different inputs for similar scenarios or expected behaviours.
 
 Optionally, you can use Text Explorer in Microsoft Visual Studio to run the unit and integration test:
@@ -257,7 +259,6 @@ You can follow the test coverage reports of this project in the [CodeCov website
 ![Icicle][codecov-icicle]
 
 **IMPORTANT NOTE:** Even that we can see there is a decent coverage [![codecov](https://codecov.io/gh/zatarain/white-pages/graph/badge.svg?token=55VMMF1IUP)](https://codecov.io/gh/zatarain/white-pages), that doesn't mean the API is flawless, as it was mentioned in the [Assumptions section](#-assumptions) there are many chances to improve and further work, and for sure it may have even more.
-
 
 ## 📚 References
 
