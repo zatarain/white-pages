@@ -232,15 +232,21 @@ You will get an output like following:
 
 2. The API includes swagger for Development environment, so you access via your web browser to `http://localhost:7080/swagger`:
 
+![image](https://github.com/zatarain/white-pages/assets/539783/2071c3e2-7f8e-4d7e-b5ae-8d9b38b291e2)
 
 3. The [`requests/`][json-requests] also contains a `white-pages.postman.json` file to import in Postman with a collection of request:
 
+![image](https://github.com/zatarain/white-pages/assets/539783/5f1c1077-3d36-424d-aaea-0217f2df65b1)
+
 ### ♻️ Automated
 
-Automated unit testing has been implemented and they run on each push and pull requests within the GitHub Actions Pipeline [![Continuous Integration Pipeline](https://github.com/zatarain/white-pages/actions/workflows/api.yml/badge.svg)](https://github.com/zatarain/white-pages/actions/workflows/api.yml) and when the Docker image is build. Following is how they are shown in [GitHub website][whitepages-actions]:
-
+Automated unit testing has been implemented and they run on each push and pull requests within the GitHub Actions Pipeline [![Continuous Integration Pipeline](https://github.com/zatarain/white-pages/actions/workflows/api.yml/badge.svg)](https://github.com/zatarain/white-pages/actions/workflows/api.yml). Following is how they are shown in [GitHub website][whitepages-actions]:
 
 Some of those integration testing use [DDT (Data Driven Testing) approach][data-driven-testing] in order to test different inputs for similar scenarios or expected behaviours.
+
+Optionally, you can use Text Explorer in Microsoft Visual Studio to run the unit and integration test:
+
+![image](https://github.com/zatarain/white-pages/assets/539783/312e2d7d-9701-4dd4-8fb4-6450676924bc)
 
 ### 💯 Coverage
 
