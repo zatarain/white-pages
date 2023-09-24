@@ -122,5 +122,20 @@ namespace ConsumerManager.Integration.Tests.Controllers
       // Assert
       response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+    [Fact]
+    public async Task ReadAll_Always_ReturnsListOfCustomers()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+
+      // Act
+      var response = await client.GetAsync("/customers");
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.OK);
+      var customers = await response.Content.ReadFromJsonAsync<List<Customer>>();
+      customers.Should().NotBeNull();
+    }
   }
 }
