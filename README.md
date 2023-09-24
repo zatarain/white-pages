@@ -49,6 +49,17 @@ The API should be able to manage a database for the customers and each customer 
 * **Add a new address to a customer.** It should create a new address record for a customer. A customer may have multiple addresses.
 * **Delete annotations.** The API should provide a mechanism to delete addresses, but cannot delete the last one, a customer MUST have at least one address.
 
+### 🤔 Assumptions
+
+This just is a small example and either consider some assumptions and/or it's not taking care about some corner case scenarios like following:
+
+* The data transfer objects for the input of all the request and successful responses is JSON or empty.
+* The environment variables and secrets (e. g. `POSTGRES_USERNAME` to connect to the database) for API configuration are set in the host machine (see [Running section](#-running) below for more information). In the real world the secrets should be stored and provisioned by an external system (e. g. AWS Secret Manager).
+* The storage will be a [PostgreSQL][postgresql] relational database using a [Docker][docker] container with a volume for development.
+* The customer and address records are created via separated requests for different end-points. So, when we created a customer is assumed active and without any address.
+* In order to create an address we send a URL parameter for `customerId` to the end-point, in the reality this should be taken from the user who is currently authorised via some mechanism like [JSON Web Token][what-is-jwt] (which is not implemented) and sends the request.
+* When the main address for a customer is deleted, some of the secondary addresses of the customer will become the new main address, but this one is arbitrarily selected (like just the first result of the query).
+
 ## 📚 References
 
 * [.NET Core Documentation][dotnet-core]
