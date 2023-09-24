@@ -161,6 +161,24 @@ We are using C# as programming language for the implementation of the API operat
 
 There is a [continuous integration workflow][ci-cd-pipeline] that runs in [GitHub Actions][github-actions] which is responsible to build the API, run the database migrations, unit tests and integration tests, then it generates coverage report.
 
+### 📦 Dependencies
+
+We are using following libraries for the implementation:
+
+* **`Microsoft.AspNetCore.OpenApi`.** A web framework to implement a RESTful API via HTTP.
+* **`Microsoft.EntityFrameworkCore`.** A library for Object Relational Model (ORM) in order to represent the records in the database as relational objects.
+* **`Npgsql.EntityFrameworkCore.PostgreSQL`.** Adaptation to manage PostgreSQL dialect and connect to the database with .NET Entity Framework.
+
+And also, following ones for the development:
+
+* **`xUnit`.** Framework for unit testing.
+* **`FluentAssertions`.** To have more readable assertions on the unit and integration testing.
+* **`Moq`.** To create mocks used on unit testing.
+
+### 🗄️ Storage
+
+A Docker container it's not persistent itself, so the Docker Compose file specify a volume to make the database persistent, that volume is mapped to `./data` host subdirectory within repository/solution directory. The [following sections](#-running) will explain how to do that in order to run the API locally.
+
 ## 📚 References
 
 * [.NET Core Documentation][dotnet-core]
@@ -168,6 +186,7 @@ There is a [continuous integration workflow][ci-cd-pipeline] that runs in [GitHu
 * [Entity Framework Documentation][ef-docs]
 * [xUnite Documentation][xunit-docs]
 * [Moq Documentation][moq-docs]
+* [Fluent Assertions Documentation][fluent-assertions-docs]
 * [GitHub Actions Documentation][github-actions-docs]
 
 ---
@@ -181,6 +200,7 @@ There is a [continuous integration workflow][ci-cd-pipeline] that runs in [GitHu
 [postgresql]: https://www.postgresql.org/docs/
 [postgresql-data-types]: https://www.postgresql.org/docs/current/datatype.html
 [ef-docs]: https://learn.microsoft.com/en-gb/ef/
+[fluent-assertions-docs]: https://fluentassertions.com/introduction
 [moq-docs]: https://github.com/devlooped/moq
 [xunit-docs]: https://xunit.net/#documentation
 [github-actions]: https://github.com/features/actions
