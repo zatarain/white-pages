@@ -19,7 +19,6 @@ namespace ConsumerManager.Integration.Tests.Controllers
   public class CustomersControllerTest : IClassFixture<TestApplicationFactory<Program>>
   {
     private readonly TestApplicationFactory<Program> factory;
-
     private readonly Random random = new();
 
     public CustomersControllerTest(TestApplicationFactory<Program> factory)
