@@ -190,12 +190,29 @@ namespace ConsumerManager.Integration.Tests.Controllers
       var response = await client.PatchAsync($"/customers/{customer?.Id}/deactivate", null);
 
       // Assert
-      // Assert
       response.StatusCode.Should().Be(HttpStatusCode.OK);
       var updated = await response.Content.ReadFromJsonAsync<Customer>();
       updated.Should().NotBeNull();
       updated.Id.Should().Be(customer.Id);
       updated.IsActive.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task GetOnlyActive_Always_ReturnsAListOfOnlyActiveCustomers()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+      var customer = await CreateRandomCustomer(client);
+      await client.PatchAsync($"/customers/{customer?.Id}/deactivate", null);
+
+      // Act
+      var response = await client.GetAsync("/customers/only-active");
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.OK);
+      var customers = await response.Content.ReadFromJsonAsync<List<Customer>>();
+      customers.Should().NotBeNull();
+      customers.Should().NotContain(result => !result.IsActive || result.Id == customer.Id);
     }
   }
 }
