@@ -178,5 +178,24 @@ namespace ConsumerManager.Integration.Tests.Controllers
       // Assert
       response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
+
+    [Fact]
+    public async Task Deactivate_ExistentCustomer_ReturnsUpdatedCustomer()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+      var customer = await CreateRandomCustomer(client);
+
+      // Act
+      var response = await client.PatchAsync($"/customers/{customer?.Id}/deactivate", null);
+
+      // Assert
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.OK);
+      var updated = await response.Content.ReadFromJsonAsync<Customer>();
+      updated.Should().NotBeNull();
+      updated.Id.Should().Be(customer.Id);
+      updated.IsActive.Should().BeFalse();
+    }
   }
 }
