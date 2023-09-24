@@ -53,11 +53,7 @@ namespace ConsumerManager.Controllers
     public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerRequest request)
     {
       logger.LogInformation("Trying to create a new customer");
-      if (request is null)
-      {
-        return BadRequest("You need to provide data for new customer.");
-      }
-
+      
       if (await service.CustomerExists(request.Email, request.Phone))
       {
         return BadRequest($"A customer with the email '{request.Email}' and/or phone '{request.Phone}' already exists.");

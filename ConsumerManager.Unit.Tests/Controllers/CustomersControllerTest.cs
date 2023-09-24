@@ -164,19 +164,6 @@ namespace ConsumerManager.Unit.Tests.Controllers
     }
 
     [Fact]
-    public async Task Create_WithNullInputData_ReturnsBadrequest()
-    {
-      // Arrange
-      var controller = new CustomersController(loggerMock.Object, serviceMock.Object);
-
-      // Act
-      var actual = await controller.Create(null);
-
-      // Assert
-      actual?.Result.Should().BeOfType<BadRequestObjectResult>();
-    }
-
-    [Fact]
     public async Task Create_WithExistentData_ReturnsBadrequest()
     {
       // Arrange

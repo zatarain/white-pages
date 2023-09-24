@@ -82,6 +82,10 @@ namespace ConsumerManager.Controllers
       }
 
       var address = customer.Addresses?.First(address => address.Id == id);
+      if (address is null)
+      {
+        return NotFound();
+      }
       await service.DeleteAddress(address);
 
       if (customer.MainAddressId == id)

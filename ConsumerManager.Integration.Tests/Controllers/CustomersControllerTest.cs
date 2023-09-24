@@ -51,17 +51,35 @@ namespace ConsumerManager.Integration.Tests.Controllers
         Phone = phone,
       };
 
-      // Act
-      // var actual = await controller.Create(request);
-      var response = await client.PostAsync(
-        "/customers",
-        new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
-        {
-          Headers = {
-            ContentType = new MediaTypeHeaderValue("application/json"),
-          }
+      var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
+      {
+        Headers = {
+          ContentType = new MediaTypeHeaderValue("application/json"),
         }
-      );
+      };
+
+      // Act
+      var response = await client.PostAsync("/customers", body);
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Create_WithNullBody_ReturnsBadRequest()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+
+      var body = new StringContent(JsonConvert.SerializeObject(null), Encoding.UTF8)
+      {
+        Headers = {
+          ContentType = new MediaTypeHeaderValue("application/json"),
+        }
+      };
+
+      // Act
+      var response = await client.PostAsync("/customers", body);
 
       // Assert
       response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
