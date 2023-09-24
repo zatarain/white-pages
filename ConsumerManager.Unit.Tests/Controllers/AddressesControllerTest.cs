@@ -238,7 +238,7 @@ namespace ConsumerManager.Unit.Tests.Controllers
       };
       serviceMock.Setup(mock => mock.GetCustomerByAddressId(It.IsAny<int>())).ReturnsAsync(customer);
       serviceMock.Setup(mock => mock.DeleteAddress(It.IsAny<Address>())).Returns(Task.CompletedTask);
-      serviceMock.Setup(mock => mock.UpdateCustomer(It.IsAny<Customer>())).Returns(Task.CompletedTask);
+      serviceMock.Setup(mock => mock.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<Customer>())).Returns(Task.CompletedTask);
 
       var controller = new AddressesController(loggerMock.Object, serviceMock.Object);
 
@@ -248,9 +248,11 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual.Should().BeOfType<NoContentResult>();
       serviceMock.Verify(
-        mock => mock.UpdateCustomer(It.Is<Customer>(
-          customer => customer.MainAddressId == secondary.Id)
-        ),
+        mock => mock.UpdateCustomer(
+          It.IsAny<Customer>(),
+          It.Is<Customer>(
+            customer => customer.MainAddressId == secondary.Id)
+          ),
         Times.Once()
       );
     }

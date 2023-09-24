@@ -55,9 +55,12 @@ namespace ConsumerManager.Entities.Database
       await model.SaveChangesAsync();
     }
 
-    public virtual async Task UpdateCustomer(Customer customer)
+    public virtual async Task UpdateCustomer(Customer current, Customer updated)
     {
-      model.Customers.Update(customer);
+      model.Customers.Attach(current);
+      model.Customers.Entry(current).State = EntityState.Detached;
+      model.Customers.Entry(updated).State = EntityState.Modified;
+      model.Customers.Update(updated);
       await model.SaveChangesAsync();
     }
 

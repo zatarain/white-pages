@@ -57,6 +57,13 @@ namespace ConsumerManager.Controllers
 
       await service.CreateAddress(address);
       logger.LogInformation("New address created successfully.");
+      if (customer.Addresses?.Count == 0 || customer.MainAddressId == 0)
+      {
+        await service.UpdateCustomer(customer, customer with {
+          MainAddressId = address.Id,
+          LastUpdatedAt = now,
+        });
+      }
       return CreatedAtAction(nameof(Read), new { id = address.Id }, address);
     }
 
@@ -90,7 +97,7 @@ namespace ConsumerManager.Controllers
           MainAddressId = addressId ?? 0,
           LastUpdatedAt = DateTime.UtcNow,
         };
-        await service.UpdateCustomer(updated);
+        await service.UpdateCustomer(customer, updated);
       }
 
       logger.LogInformation("Address successfully deleted.");
