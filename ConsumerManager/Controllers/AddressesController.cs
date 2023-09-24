@@ -86,7 +86,10 @@ namespace ConsumerManager.Controllers
       if (customer.MainAddressId == id)
       {
         var addressId = customer.Addresses?.FirstOrDefault(address => address.Id != id)?.Id;
-        Customer updated = customer with { MainAddressId = addressId ?? 0 };
+        Customer updated = customer with {
+          MainAddressId = addressId ?? 0,
+          LastUpdatedAt = DateTime.UtcNow,
+        };
         await service.UpdateCustomer(updated);
       }
 
