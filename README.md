@@ -7,21 +7,21 @@ This project aims to be an API to manage customer contacts and their addresses. 
 ## 📂 Table of content
 
 * 📹 [Overview](#-overview)
-  - ☑️ [Requirements](#☑️-requirements)
-  - 🤔 [Assumptions](#-assumptions)
+  * ☑️ [Requirements](#%EF%B8%8F-requirements)
+  * 🤔 [Assumptions](#-assumptions)
 * 📐 [Design](#-design)
-  - 📊 [Data model](#-data-model)
+  * 📊 [Data model](#-data-model)
     * 👤 [Customer](#-customer)
     * ✍🏽 [Address](#-address)
-  - 🔚 [End-points](#-end-points)
-* 🏗️ [Implementation details](#-implementation-details)
-  - 📦 [Dependencies](#-dependencies)
-  - 🗄️ [Storage](#-storage)
-* ⏯️ [Running](#-running)
+  * 🔚 [End-points](#-end-points)
+* 🏗️ [Implementation details](#%EF%B8%8F-implementation-details)
+  * 📦 [Dependencies](#-dependencies)
+  * 🗄️ [Storage](#%EF%B8%8F-storage)
+* ⏯️ [Running](#%EF%B8%8F-running)
 * ✅ [Testing](#-testing)
-  - 🧪 [Manual](#-manual)
-  - ♻️ [Automated](#-automated)
-  - 💯 [Coverage](#-coverage)
+  * 🧪 [Manual](#-manual)
+  * ♻️ [Automated](#%EF%B8%8F-automated)
+  * 💯 [Coverage](#-coverage)
 * 📚 [References](#-references)
 
 ## 📹 Overview
@@ -207,7 +207,15 @@ In order to play around with the API, there are `JSON` files in the directory [`
 
 You can play with it in several ways:
 
-1. For instance to add a new customer you can use `curl` command in your terminal as follow:
+1. The API includes swagger for Development environment, so you access via your web browser to `http://localhost:7080/swagger`:
+
+![image](https://github.com/zatarain/white-pages/assets/539783/2071c3e2-7f8e-4d7e-b5ae-8d9b38b291e2)
+
+2. The [`requests/`][json-requests] also contains a `white-pages.postman.json` file to import in Postman with a collection of request:
+
+![image](https://github.com/zatarain/white-pages/assets/539783/5f1c1077-3d36-424d-aaea-0217f2df65b1)
+
+3. Or you can also use `curl` command in your terminal as follow (for instance to create a customer):
 
 ```sh
 curl -X POST http://localhost:7080/customers --data @requests/customers/create.input.json
@@ -229,14 +237,6 @@ You will get an output like following:
 	"lastUpdatedAt": "2023-09-24T14:37:26.3136692Z"
 }
 ```
-
-2. The API includes swagger for Development environment, so you access via your web browser to `http://localhost:7080/swagger`:
-
-![image](https://github.com/zatarain/white-pages/assets/539783/2071c3e2-7f8e-4d7e-b5ae-8d9b38b291e2)
-
-3. The [`requests/`][json-requests] also contains a `white-pages.postman.json` file to import in Postman with a collection of request:
-
-![image](https://github.com/zatarain/white-pages/assets/539783/5f1c1077-3d36-424d-aaea-0217f2df65b1)
 
 ### ♻️ Automated
 
