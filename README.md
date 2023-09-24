@@ -42,7 +42,7 @@ The API should be able to manage a database for the customers and each customer 
 * **List only active customers.** It should return the list of active customers in the system.
 * **View customer details.** It should show the details of a customer provided by the client and its addresses.
 * **Add a new address to a customer.** It should create a new address record for a customer. A customer may have multiple addresses.
-* **Delete annotations.** The API should provide a mechanism to delete addresses, but cannot delete the last one, a customer MUST have at least one address.
+* **Delete addresses.** The API should provide a mechanism to delete addresses, but cannot delete the last one, a customer MUST have at least one address.
 
 ### 🤔 Assumptions
 
@@ -57,6 +57,7 @@ This just is a small example and either consider some assumptions and/or it's no
 * In order to determine whether a customer already exists in the database, we will distinct them based-on Email and Phone fields.
 * We will use ALPHA ISO codes for the country. Currently only 3 countries are supported United Kingdom (`GB`), Mexico (`MX`), United Stated (`US`).
 * The validation of the postcodes are based on a simple regular expression check depending of the country where is the address, the system doesn't check if the postcode actually exists.
+* Even that the API is using asynchronous tasks, we are not using [ACID Database Transactions][acid-transactions], so there could be multi-threading issues like inconsistent data.
 
 ## 📐 Design
 
@@ -125,8 +126,8 @@ This entity will represent the addresses of the customers in the system and each
 
 | ⏹️ | Name            |     Type        | Description                                                |
 |:--:| :---            |    :----:       | :---                                                       |
-| 🗝️ | `Id`            | `INTEGER`       | Auto-numeric identifier for the annotation                 |
-| ✳️ | `CustomerId`    | `INTEGER`       | Foreign key for the video                                  |
+| 🗝️ | `Id`            | `INTEGER`       | Auto-numeric identifier for the address                    |
+| ✳️ | `CustomerId`    | `INTEGER`       | Foreign key for the customer                               |
 | 🔤 | `Line1`         | `CHARACTER(80)` | **Mandatory**. First line of the address                   |
 | 🔤 | `Line2`         | `CHARACTER(80)` | An optional second line for the address                    |
 | 🔤 | `Town`          | `CHARACTER(50)` | **Mandatory**. Town, city, village where is the address    |
@@ -135,6 +136,30 @@ This entity will represent the addresses of the customers in the system and each
 | 🔤 | `Country`       | `CHARACTER(2)`  | **Mandatory**. Country ISO ALPHA-2 code (`GB`, `MX`, `US`) |
 | 🗓️ | `CreatedAt`     | `TIMESTAMP`     | Timestamp with time zone representing the creation time    |
 | 🗓️ | `LastUpdatedAt` | `TIMESTAMP`     | Timestamp with time zone representing the last update time |
+
+### 🔚 End-points
+
+The input for all the API end-points will be always in JSON format and in most of the cases and the output will be in the same format. The end-points for the API are described in following table:
+
+| Method   | Address                     | Description                            | Success Status | Possible Failure Status            |
+| :---:    | :---                        | :----                                  | :---:          | :---                               |
+| `HEAD`   | `/health`                   | Service health check                   | `200 OK`       | `*Any*`                            |
+| `GET`    | `/customers`                | List of all customers                  | `200 OK`       | `*Any*`                            |
+| `GET`    | `/customers/only-active`    | List of active customers               | `200 OK`       | `*Any*`                            |
+| `GET`    | `/customers/:id`            | Get customer details and its addresses | `200 OK`       | `404 Not Found`                    |
+| `POST`   | `/customers`                | Create a customer record in the system | `200 Created`  | `400 Bad Request`                  |
+| `PATCH`  | `/customers/:id/deactivate` | Deactivate a given customer            | `200 OK`       | `404 Not Found`                    |
+| `PATCH`  | `/customers/:id/activate`   | Activate a given customer              | `200 OK`       | `404 Not Found`                    |
+| `DELETE` | `/customers/:id`            | Delete a customer and its addresses    | `200 NoContent`| `404 Not Found`                    |
+| `POST`   | `/addresses/:customerId`    | Create a address record for a customer | `200 Created`  | `400 Bad Request`, `404 Not Found` |
+| `GET`    | `/addresses/:id`            | Get details for an address             | `200 OK`       | `404 Not Found`                    |
+| `DELETE` | `/addresses/:id`            | Delete an address                      | `200 NoContent`| `400 Bad Request`, `404 Not Found` |
+
+## 🏗️ Implementation details
+
+We are using C# as programming language for the implementation of the API operations. And the database is a container in Postgres to stored locally in development and test environments.
+
+There is a [continuous integration workflow][ci-cd-pipeline] that runs in [GitHub Actions][github-actions] which is responsible to build the API, run the database migrations, unit tests and integration tests, then it generates coverage report.
 
 ## 📚 References
 
@@ -151,7 +176,6 @@ This entity will represent the addresses of the customers in the system and each
 [what-is-jwt]: https://jwt.io/introduction
 [docker]: https://www.docker.com
 [docker-hub]: https://hub.docker.com
-[white-pages-image]: https://hub.docker.com/repository/docker/zatarain/white-pages/tags
 [white-pages-repo]: https://github.com/zatarain/white-pages
 [dotnet-core]: https://learn.microsoft.com/en-gb/dotnet/core/introduction
 [postgresql]: https://www.postgresql.org/docs/
@@ -166,8 +190,8 @@ This entity will represent the addresses of the customers in the system and each
 [codecov-grid]: https://codecov.io/gh/zatarain/white-pages/branch/main/graphs/tree.svg?token=55VMMF1IUP
 [codecov-icicle]: https://codecov.io/gh/zatarain/white-pages/branch/main/graphs/icicle.svg?token=55VMMF1IUP
 [whitepages-actions]: https://github.com/zatarain/white-pages/actions
-[ci-cd-pipeline]: https://github.com/zatarain/white-pages/blob/main/.github/workflows/pipeline.yml
-[compose-yml]: https://github.com/zatarain/white-pages/blob/main/compose.yml
+[ci-cd-pipeline]: https://github.com/zatarain/white-pages/actions/workflows/api.yml
+[compose-yml]: https://github.com/zatarain/white-pages/blob/main/docker-compose.yml
 [postman-website]: https://www.postman.com
 [acid-transactions]: https://en.wikipedia.org/wiki/ACID
 [data-driven-testing]: https://en.wikipedia.org/wiki/Data-driven_testing
