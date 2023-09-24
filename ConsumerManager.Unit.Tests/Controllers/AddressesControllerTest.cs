@@ -131,5 +131,29 @@ namespace ConsumerManager.Unit.Tests.Controllers
         options => options.ComparingByMembers<Address>().ExcludingMissingMembers()
       );
     }
+
+    [Fact]
+    public async Task Create_ForUnexistentCustomer_ReturnsNotFound()
+    {
+      // Arrange
+      serviceMock.Setup(mock => mock.GetCustomerById(It.IsAny<int>())).ReturnsAsync(null as Customer);
+      var request = new CreateAddressRequest()
+      {
+        Line1 = "Flat 101",
+        Line2 = "Gainsborough House, Cassilis Road",
+        Town = "London",
+        County = "",
+        Postcode = "E14 9LR",
+        Country = "GB",
+      };
+
+      var controller = new AddressesController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Create(7, request);
+
+      // Assert
+      actual.Result.Should().BeOfType<NotFoundObjectResult>();
+    }
   }
 }

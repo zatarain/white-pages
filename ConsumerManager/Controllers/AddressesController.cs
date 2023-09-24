@@ -35,11 +35,6 @@ namespace ConsumerManager.Controllers
     public async Task<ActionResult<Address>> Create(int customerId, [FromBody] CreateAddressRequest request)
     {
       logger.LogInformation("Trying to create a new customer");
-      if (request is null)
-      {
-        return BadRequest("You need to provide data for new address.");
-      }
-
       var customer = await service.GetCustomerById(customerId);
       if (customer is null)
       {
@@ -65,7 +60,7 @@ namespace ConsumerManager.Controllers
       return CreatedAtAction(nameof(Read), new { id = address.Id }, address);
     }
 
-    [HttpDelete("{id}")] // DELETE /addresses/5
+    [HttpDelete("{id}")] // DELETE /addresses/{id}
     public async Task<ActionResult> Delete(int id)
     {
       logger.LogInformation("Deleting address.");
