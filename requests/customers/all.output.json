@@ -1,0 +1,53 @@
+[
+    {
+        "id": 3,
+        "title": "Mr.",
+        "forename": "New",
+        "surname": "Customer",
+        "email": "mr-new@customer.com",
+        "phone": "+440719956789",
+        "isActive": true,
+        "mainAddressId": 0,
+        "addresses": [
+            {
+                "id": 2,
+                "line1": "Flat 101 Gainsborough House",
+                "line2": "Cassilis Road",
+                "town": "London",
+                "county": "",
+                "postcode": "E14 9LR",
+                "country": "GB",
+                "customerId": 3,
+                "createdAt": "2023-09-24T14:30:13.131255Z",
+                "lastUpdatedAt": "2023-09-24T14:30:13.131255Z"
+            },
+            {
+                "id": 4,
+                "line1": "60 Park Lane",
+                "line2": "",
+                "town": "London",
+                "county": "",
+                "postcode": "N99BQ",
+                "country": "GB",
+                "customerId": 3,
+                "createdAt": "2023-09-24T14:35:56.722574Z",
+                "lastUpdatedAt": "2023-09-24T14:35:56.722574Z"
+            }
+        ],
+        "createdAt": "2023-09-24T14:22:39.067699Z",
+        "lastUpdatedAt": "2023-09-24T14:22:39.067699Z"
+    },
+    {
+        "id": 4,
+        "title": "Mr.",
+        "forename": "New",
+        "surname": "Customer",
+        "email": "mr-newc@customer.com",
+        "phone": "+4407223456789",
+        "isActive": false,
+        "mainAddressId": 0,
+        "addresses": [],
+        "createdAt": "2023-09-24T14:37:26.313669Z",
+        "lastUpdatedAt": "2023-09-24T14:37:26.313669Z"
+    }
+]

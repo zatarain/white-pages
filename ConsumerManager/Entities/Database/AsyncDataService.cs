@@ -55,9 +55,12 @@ namespace ConsumerManager.Entities.Database
       await model.SaveChangesAsync();
     }
 
-    public virtual async Task UpdateCustomer(Customer customer)
-    {      
-      model.Customers.Update(customer);
+    public virtual async Task UpdateCustomer(Customer current, Customer updated)
+    {
+      model.Customers.Attach(current);
+      model.Customers.Entry(current).State = EntityState.Detached;
+      model.Customers.Entry(updated).State = EntityState.Modified;
+      model.Customers.Update(updated);
       await model.SaveChangesAsync();
     }
 
@@ -73,6 +76,11 @@ namespace ConsumerManager.Entities.Database
         IsActive = isActive,
         LastUpdatedAt = DateTime.UtcNow,
       };
+      
+      model.Customers.Attach(customer);
+      model.Customers.Entry(customer).State = EntityState.Detached;
+      model.Customers.Entry(updated).State = EntityState.Modified;
+      model.Customers.Update(updated);
       await model.SaveChangesAsync();
       return updated;
     }

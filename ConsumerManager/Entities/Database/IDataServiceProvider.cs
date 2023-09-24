@@ -8,7 +8,7 @@
     public Task<Customer?> GetCustomerById(int id);
     public Task<List<Customer>> GetOnlyActiveCustomers();
     public Task DeleteCustomer(Customer customer);
-    public Task UpdateCustomer(Customer customer);
+    public Task UpdateCustomer(Customer current, Customer updated);
     public Task<Customer?> UpdateCustomerStatus(int id, bool isActive);
     public Task<Customer?> GetCustomerByAddressId(int id);
     public Task CreateAddress(Address address);    
