@@ -73,6 +73,7 @@ namespace ConsumerManager.Entities.Database
         IsActive = isActive,
         LastUpdatedAt = DateTime.UtcNow,
       };
+      model.Customers.Update(updated);
       await model.SaveChangesAsync();
       return updated;
     }

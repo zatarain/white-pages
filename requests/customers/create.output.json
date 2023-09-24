@@ -1,0 +1,12 @@
+{
+	"id": 4,
+	"title": "Mr.",
+	"forename": "New",
+	"surname": "Customer",
+	"email": "mr-newc@customer.com",
+	"phone": "+4407223456789",
+	"isActive": true,
+	"mainAddressId": 0,
+	"createdAt": "2023-09-24T14:37:26.3136692Z",
+	"lastUpdatedAt": "2023-09-24T14:37:26.3136692Z"
+}

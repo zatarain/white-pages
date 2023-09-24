@@ -148,10 +148,10 @@ The input for all the API end-points will be always in JSON format and in most o
 | `POST`   | `/customers`                | Create a customer record in the system | `200 Created`  | `400 Bad Request`                  |
 | `PATCH`  | `/customers/:id/deactivate` | Deactivate a given customer            | `200 OK`       | `404 Not Found`                    |
 | `PATCH`  | `/customers/:id/activate`   | Activate a given customer              | `200 OK`       | `404 Not Found`                    |
-| `DELETE` | `/customers/:id`            | Delete a customer and its addresses    | `200 NoContent`| `404 Not Found`                    |
+| `DELETE` | `/customers/:id`            | Delete a customer and its addresses    | `204 NoContent`| `404 Not Found`                    |
 | `POST`   | `/addresses/:customerId`    | Create a address record for a customer | `200 Created`  | `400 Bad Request`, `404 Not Found` |
 | `GET`    | `/addresses/:id`            | Get details for an address             | `200 OK`       | `404 Not Found`                    |
-| `DELETE` | `/addresses/:id`            | Delete an address                      | `200 NoContent`| `400 Bad Request`, `404 Not Found` |
+| `DELETE` | `/addresses/:id`            | Delete an address                      | `204 NoContent`| `400 Bad Request`, `404 Not Found` |
 
 ## 🏗️ Implementation details
 
@@ -182,6 +182,7 @@ A Docker container it's not persistent itself, so the Docker Compose file specif
 In order to build and run the application locally you will need to have Docker installed and internet connection to download the dependency packages and set some environment variables. Optionally, you can open and run the solution file `white-pages.sln` with Microsoft Visual Studio Community Edition.
 
 In your terminal, clone repository, build image and run containers swarm as follow:
+
 ```sh
 export POSTGRES_HOST=database
 export POSTGRES_PORT=5432
@@ -195,6 +196,60 @@ docker compose up --build
 ```
 
 That will follow the configuration specified in the [`docker-compose.yml`][compose-yml] file to build the image and run the unit testing on building time, and then run the API in development mode. **Port binding [`-p 7080:80`]:** The image it's built to run the API on port `80` withing the container and is mapped to `7080` on the host machine. Then you can follow the steps to play manually with the API with the steps in next section.
+
+## ✅ Testing
+
+This project is able to be tested in manual way and with automated unit testing. This section will explain how can you play around with the API once you run it following the steps of the [previous section](#-running).
+
+### 🧪 Manual
+
+In order to play around with the API, there are `JSON` files in the directory [`requests/`][json-requests] of the repository for each of [the end-points in the API](#-end-points). There are JSON files for _input_ for the `POST` and `PATCH` end-points and there are examples of _outputs_ returned by the API.
+
+You can play with it in several ways:
+
+1. For instance to add a new customer you can use `curl` command in your terminal as follow:
+
+```sh
+curl -X POST http://localhost:7080/customers --data @requests/customers/create.input.json
+```
+
+You will get an output like following:
+
+```json
+{
+	"id": 1,
+	"title": "Mr.",
+	"forename": "New",
+	"surname": "Customer",
+	"email": "mr-newc@customer.com",
+	"phone": "+4407223456789",
+	"isActive": true,
+	"mainAddressId": 0,
+	"createdAt": "2023-09-24T14:37:26.3136692Z",
+	"lastUpdatedAt": "2023-09-24T14:37:26.3136692Z"
+}
+```
+
+2. The API includes swagger for Development environment, so you access via your web browser to `http://localhost:7080/swagger`:
+
+
+3. The [`requests/`][json-requests] also contains a `white-pages.postman.json` file to import in Postman with a collection of request:
+
+### ♻️ Automated
+
+Automated unit testing has been implemented and they run on each push and pull requests within the GitHub Actions Pipeline [![Continuous Integration Pipeline](https://github.com/zatarain/white-pages/actions/workflows/api.yml/badge.svg)](https://github.com/zatarain/white-pages/actions/workflows/api.yml) and when the Docker image is build. Following is how they are shown in [GitHub website][whitepages-actions]:
+
+
+Some of those integration testing use [DDT (Data Driven Testing) approach][data-driven-testing] in order to test different inputs for similar scenarios or expected behaviours.
+
+### 💯 Coverage
+
+You can follow the test coverage reports of this project in the [CodeCov website][codecov-whitepages]:
+
+![Icicle][codecov-icicle]
+
+**IMPORTANT NOTE:** Even that we can see there is a good coverage [![codecov](https://codecov.io/gh/zatarain/white-pages/graph/badge.svg?token=55VMMF1IUP)](https://codecov.io/gh/zatarain/white-pages), that doesn't mean the API is flawless, as it was mentioned in the [Assumptions section](#-assumptions) there are many chances to improve and further work, and for sure it may have even more.
+
 
 ## 📚 References
 
@@ -232,5 +287,5 @@ That will follow the configuration specified in the [`docker-compose.yml`][compo
 [postman-website]: https://www.postman.com
 [acid-transactions]: https://en.wikipedia.org/wiki/ACID
 [data-driven-testing]: https://en.wikipedia.org/wiki/Data-driven_testing
-[test-data-json]: https://github.com/zatarain/white-pages/tree/main/test
+[json-requests]: https://github.com/zatarain/white-pages/tree/main/requests
 [sqlite-viewer]: https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer

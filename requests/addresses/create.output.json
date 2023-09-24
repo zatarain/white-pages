@@ -1,0 +1,12 @@
+{
+	"id": 4,
+	"line1": "60 Park Lane",
+	"line2": "",
+	"town": "London",
+	"county": "",
+	"postcode": "N99BQ",
+	"country": "GB",
+	"customerId": 3,
+	"createdAt": "2023-09-24T14:35:56.7225747Z",
+	"lastUpdatedAt": "2023-09-24T14:35:56.7225747Z"
+}
