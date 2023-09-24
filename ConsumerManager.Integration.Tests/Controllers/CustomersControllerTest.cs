@@ -179,6 +179,20 @@ namespace ConsumerManager.Integration.Tests.Controllers
       response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
+
+    [Fact]
+    public async Task Activate_UnexistentCustomer_ReturnsNotFound()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+
+      // Act
+      var response = await client.PatchAsync($"/customers/0/activate", null);
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     [Fact]
     public async Task Deactivate_ExistentCustomer_ReturnsUpdatedCustomer()
     {
