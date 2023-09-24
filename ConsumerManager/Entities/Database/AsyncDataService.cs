@@ -69,7 +69,10 @@ namespace ConsumerManager.Entities.Database
         return customer;
       }
 
-      Customer updated = customer with { IsActive = isActive };
+      Customer updated = customer with {
+        IsActive = isActive,
+        LastUpdatedAt = DateTime.UtcNow,
+      };
       await model.SaveChangesAsync();
       return updated;
     }
