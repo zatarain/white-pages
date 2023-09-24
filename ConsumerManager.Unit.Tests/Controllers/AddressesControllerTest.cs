@@ -98,5 +98,38 @@ namespace ConsumerManager.Unit.Tests.Controllers
       // Assert
       actual.Result.Should().BeOfType<NotFoundResult>();
     }
+
+
+    [Fact]
+    public async Task Create_WithValidInput_ReturnsCreatedAddress()
+    {
+      // Arrange
+      var customer = CreateTestCustomer();
+      serviceMock.Setup(mock => mock.GetCustomerById(It.IsAny<int>())).ReturnsAsync(customer);
+      serviceMock.Setup(mock => mock.CreateAddress(It.IsAny<Address>())).Returns(Task.CompletedTask);
+      var request = new CreateAddressRequest()
+      {
+        Line1 = "Flat 101",
+        Line2 = "Gainsborough House, Cassilis Road",
+        Town = "London",
+        County = "",
+        Postcode = "E14 9LR",
+        Country = "GB",
+      };
+
+      var controller = new AddressesController(loggerMock.Object, serviceMock.Object);
+
+      // Act
+      var actual = await controller.Create(customer.Id, request);
+
+      // Assert
+      actual.Result.Should().BeOfType<CreatedAtActionResult>();
+      var result = actual.Result as CreatedAtActionResult;
+      var createdAddress = result?.Value as Address;
+      request.Should().BeEquivalentTo(
+        createdAddress,
+        options => options.ComparingByMembers<Address>().ExcludingMissingMembers()
+      );
+    }
   }
 }

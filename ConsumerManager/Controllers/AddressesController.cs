@@ -41,7 +41,7 @@ namespace ConsumerManager.Controllers
       }
 
       var customer = await service.GetCustomerById(customerId);
-      if (customer is null) 
+      if (customer is null)
       {
         return NotFound("Customer doesn't exists!");
       }
