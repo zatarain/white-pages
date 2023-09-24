@@ -137,5 +137,38 @@ namespace ConsumerManager.Integration.Tests.Controllers
       var customers = await response.Content.ReadFromJsonAsync<List<Customer>>();
       customers.Should().NotBeNull();
     }
+
+
+    [Fact]
+    public async Task Delete_ExistentCustomer_ReturnsNoContent()
+    {
+      // Arrange
+      var client = factory.CreateClient();
+
+      CreateCustomerRequest request = new()
+      {
+        Title = "Mr.",
+        Forename = "Deletable",
+        Surname = "Customer",
+        Email = "to-delete@example.com",
+        Phone = "+5216691220511",
+      };
+
+      var body = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8)
+      {
+        Headers = {
+          ContentType = new MediaTypeHeaderValue("application/json"),
+        }
+      };
+
+      var createResponse = await client.PostAsync("/customers", body);      
+      var customer = await createResponse.Content.ReadFromJsonAsync<Customer>();
+
+      // Act
+      var response = await client.DeleteAsync($"/customers/{customer?.Id}");
+
+      // Assert
+      response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
   }
 }
