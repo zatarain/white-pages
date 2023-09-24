@@ -18,8 +18,6 @@ This project aims to be an API to manage customer contacts and their addresses. 
   - 📦 [Dependencies](#-dependencies)
   - 🗄️ [Storage](#-storage)
 * ⏯️ [Running](#-running)
-  - 🍏 [Development Mode](#-development-mode)
-  - 🍎 [Production Mode](#-production-mode)
 * ✅ [Testing](#-testing)
   - 🧪 [Manual](#-manual)
   - ♻️ [Automated](#-automated)
@@ -178,6 +176,25 @@ And also, following ones for the development:
 ### 🗄️ Storage
 
 A Docker container it's not persistent itself, so the Docker Compose file specify a volume to make the database persistent, that volume is mapped to `./data` host subdirectory within repository/solution directory. The [following sections](#-running) will explain how to do that in order to run the API locally.
+
+## ⏯️ Running
+
+In order to build and run the application locally you will need to have Docker installed and internet connection to download the dependency packages and set some environment variables. Optionally, you can open and run the solution file `white-pages.sln` with Microsoft Visual Studio Community Edition.
+
+In your terminal, clone repository, build image and run containers swarm as follow:
+```sh
+export POSTGRES_HOST=database
+export POSTGRES_PORT=5432
+export POSTGRES_USERNAME=administrator
+export POSTGRES_PASSWORD="my-super-secret-password"
+
+git clone https://github.com/zatarain/white-pages.git
+cd white-pages
+mkdir data # Create data subdirectory for the database
+docker compose up --build
+```
+
+That will follow the configuration specified in the [`docker-compose.yml`][compose-yml] file to build the image and run the unit testing on building time, and then run the API in development mode. **Port binding [`-p 7080:80`]:** The image it's built to run the API on port `80` withing the container and is mapped to `7080` on the host machine. Then you can follow the steps to play manually with the API with the steps in next section.
 
 ## 📚 References
 
