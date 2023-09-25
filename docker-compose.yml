@@ -22,7 +22,7 @@ services:
 
   database:
     container_name: database
-    image: postgis/postgis:14-3.3
+    image: postgres:14.9
     restart: always
     ports:
       - 5432:5432
