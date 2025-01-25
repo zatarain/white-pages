@@ -65,6 +65,8 @@ jobs:
           dotnet restore --locked-mode white-pages.sln
       - name: Compiling projects
         run: dotnet build --configuration Release --no-restore white-pages.sln
+      - name: After build
+        run: echo "This is a change after build"
       - name: Running database migrations
         run: dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
       - name: Running unit tests
