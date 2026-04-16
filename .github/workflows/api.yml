@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14.9
+        image: postgres:16
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -65,6 +65,8 @@ jobs:
           dotnet restore --locked-mode white-pages.sln
       - name: Compiling projects
         run: dotnet build --configuration Release --no-restore white-pages.sln
+      - name: After build
+        run: echo "This is a change after build"
       - name: Running database migrations
         run: dotnet ef database update --startup-project ConsumerManager --project ConsumerManager
       - name: Running unit tests
