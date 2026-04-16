@@ -1,5 +1,3 @@
-version: "3.4"
-
 services:
   consumermanager:
     container_name: api-service
